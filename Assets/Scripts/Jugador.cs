@@ -3,8 +3,15 @@ using UnityEngine;
 public class Jugador : MonoBehaviour
 {
     CharacterController characterController;
-    Transform transformCamara;
-    Transform transformModelo;
+    /*Transform transformCamara;
+    Transform transformModelo;*/
+    // version profe
+    GameObject objetoRotacionCamara;
+    GameObject camara;
+    GameObject objetoModelo;
+    Vector3 rotacionCamara;
+    Vector3 posicionAnteriorMouse;
+
     Vector3 velocidad, rotacion;
     int puntosVelocidad;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -14,8 +21,13 @@ public class Jugador : MonoBehaviour
         velocidad = Vector3.zero;
         rotacion = Vector3.zero;
         puntosVelocidad= 4;
-        transformCamara = this.transform.GetChild(1);
-        transformModelo = this.transform.GetChild(0);
+        /*transformCamara = this.transform.GetChild(1);
+        transformModelo = this.transform.GetChild(0);*/
+        camara = this.transform.GetChild(1).gameObject;
+        objetoModelo = this.transform.GetChild(0).gameObject;
+        objetoRotacionCamara = new GameObject();
+        posicionAnteriorMouse = Input.mousePosition;
+        rotacionCamara = camara.transform.rotation.eulerAngles;
     }
 
     // Update is called once per frame
@@ -32,14 +44,26 @@ public class Jugador : MonoBehaviour
         {
             velocidad.z = Input.GetAxis("Vertical") * puntosVelocidad;
         }
-        characterController.Move(velocidad * Time.deltaTime);
 
+        // rotacion version profe
+        objetoRotacionCamara.transform.rotation = camara.transform.rotation;
+        objetoRotacionCamara.transform.rotation = Quaternion.Euler(0, objetoRotacionCamara.transform.rotation.eulerAngles.y, 0);
+        characterController.Move(objetoRotacionCamara.transform.TransformDirection(velocidad) * Time.deltaTime);
 
-        rotacion = transformCamara.rotation.eulerAngles;
+        Vector3 movimientoMouse = Input.mousePosition - posicionAnteriorMouse;
+        rotacionCamara.y += movimientoMouse.x * 0.5f;
+        rotacionCamara.x -= movimientoMouse.y * 0.5f; 
+        posicionAnteriorMouse = Input.mousePosition;
+        camara.transform.rotation = Quaternion.Euler(rotacionCamara);
+        objetoModelo.transform.rotation = Quaternion.Euler(0, rotacionCamara.y,0);
+        //characterController.Move(velocidad * Time.deltaTime);
+
+        // Mi rotacion de personaje
+        /*rotacion = transformCamara.rotation.eulerAngles;
         rotacion.x = 0;
         rotacion.z = 0;
-        transformModelo.rotation = Quaternion.Euler(rotacion);
-        //this.transform.rotation = Quaternion.RotateTowards(this.transform.rotation, transformCamara.rotation, 200 * Time.deltaTime);
-        //this.transform.rotation = Quaternion.RotateTowards(this.transform.rotation, scriptFuncionesGenericas.transform.rotation, 400 * Time.deltaTime);
+        transformModelo.rotation = Quaternion.Euler(rotacion);*/
+        // Fin de mi rotacion de personaje
+
     }
 }
