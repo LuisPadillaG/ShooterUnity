@@ -23,12 +23,15 @@ public class Zombie : MonoBehaviour
         posicion = this.transform.position;
         puntosMiZombie = 50;
         // calculo de datos MiZomnbie
-        for (int i = 0; i <= datosJugador.RondaActual || i < 10; i++) {
+        for (int i = 0; i < datosJugador.RondaActual; i++) {
+            Debug.Log("Zombie de la ronda "+ i);
             puntosMiZombie += 100;
             if(i > 5)
             {
                 velocidadZombie = 1.6f;
             }
+            if(i == 10) 
+                break;
         }
         if(datosJugador.RondaActual > 9)
         {
@@ -47,7 +50,7 @@ public class Zombie : MonoBehaviour
         posicion.z -= Mathf.Sin(rotacion.y * Mathf.Deg2Rad) * Time.deltaTime * velocidadZombie;
         this.transform.position = posicion;
         // Animaciones
-        if(velocidadZombie == 1.3f || velocidadZombie == 1.5f) //caminando, caminando rapido
+        if(velocidadZombie == 1.3f || velocidadZombie == 1.6f) //caminando, caminando rapido
         {
             zombieAnimator.SetInteger("EstadoZombie", 0);
         }
