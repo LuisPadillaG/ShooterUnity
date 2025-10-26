@@ -9,6 +9,7 @@ public class Zombie : MonoBehaviour
     Animator zombieAnimator;
     public float puntosMiZombie;
     float velocidadZombie;
+    AudioSource zombieFar_uno;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -22,6 +23,7 @@ public class Zombie : MonoBehaviour
         rotacion = Vector3.zero;
         posicion = this.transform.position;
         puntosMiZombie = 50;
+        zombieFar_uno = this.transform.GetChild(1).GetChild(0).GetChild(1).GetComponent<AudioSource>() ;
         // calculo de datos MiZomnbie
         for (int i = 0; i < datosJugador.RondaActual; i++) {
             Debug.Log("Zombie de la ronda "+ i);
@@ -38,6 +40,7 @@ public class Zombie : MonoBehaviour
             velocidadZombie = 3f;
             puntosMiZombie += + (puntosMiZombie * 0.1f);
         }
+        zombieFar_uno.Play();
     }
 
     // Update is called once per frame

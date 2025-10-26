@@ -12,7 +12,7 @@ public class M1911 : MonoBehaviour, I_Armas
     public float Rango { get; set; } = 25f;
     public int Balas { get; set; } = 8;
     public float DanoPorBala { get; set; } = 15f;
-    public float VelocidadPorBala { get; set; } = 70f;
+    public float VelocidadPorBala { get; set; } = 0.2f;
     public float Recoil { get; set; } = 0.2f;
     public float Precision { get; set; } = 0.9f;
 }
@@ -95,7 +95,7 @@ public class AK47 : MonoBehaviour, I_Armas
     public float Rango { get; set; } = 60f;
     public int Balas { get; set; } = 30;
     public float DanoPorBala { get; set; } = 35f;
-    public float VelocidadPorBala { get; set; } = 100f;
+    public float VelocidadPorBala { get; set; } = 0.1f;
     public float Recoil { get; set; } = 0.5f;
     public float Precision { get; set; } = 0.8f;
 }
@@ -113,24 +113,10 @@ public class M16 : MonoBehaviour, I_Armas
     public float Recoil { get; set; } = 0.3f;
     public float Precision { get; set; } = 0.9f;
 }
-// CUERPO A CUERPO
-public class CuchilloCombate : MonoBehaviour, I_Armas
-{
-    public int ID { get; set; } = 8;
-    public string Nombre { get; set; } = "Cuchillo de combate";
-    public string Tipo { get; set; } = "Cuerpo a cuerpo";
-
-    public float Rango { get; set; } = 2f;
-    public int Balas { get; set; } = 0;
-    public float DanoPorBala { get; set; } = 50f;
-    public float VelocidadPorBala { get; set; } = 0f;
-    public float Recoil { get; set; } = 0f;
-    public float Precision { get; set; } = 1f;
-}
 // KABOOOM
 public class GranadaFragmentacion : MonoBehaviour, I_Armas
 {
-    public int ID { get; set; } = 9;
+    public int ID { get; set; } = 8;
     public string Nombre { get; set; } = "Granada de fragmentación";
     public string Tipo { get; set; } = "Explosivos";
 
@@ -144,7 +130,7 @@ public class GranadaFragmentacion : MonoBehaviour, I_Armas
 
 public class Molotov : MonoBehaviour, I_Armas
 {
-    public int ID { get; set; } = 10;
+    public int ID { get; set; } = 9;
     public string Nombre { get; set; } = "Molotov";
     public string Tipo { get; set; } = "Explosivos";
 
@@ -158,7 +144,7 @@ public class Molotov : MonoBehaviour, I_Armas
 
 public class MonkeyBombs : MonoBehaviour, I_Armas
 {
-    public int ID { get; set; } = 11;
+    public int ID { get; set; } = 10;
     public string Nombre { get; set; } = "Monkey Bombs";
     public string Tipo { get; set; } = "Explosivos";
 
@@ -173,7 +159,7 @@ public class MonkeyBombs : MonoBehaviour, I_Armas
 // ARMAS ESPECIALES
 public class RayGun : MonoBehaviour, I_Armas
 {
-    public int ID { get; set; } = 12;
+    public int ID { get; set; } = 11;
     public string Nombre { get; set; } = "Ray Gun";
     public string Tipo { get; set; } = "Armas especiales";
 
@@ -185,3 +171,17 @@ public class RayGun : MonoBehaviour, I_Armas
     public float Precision { get; set; } = 0.95f;
 }
 
+// CUERPO A CUERPO
+public class CuchilloCombate : MonoBehaviour, I_Armas
+{
+    public int ID { get; set; } = 12;
+    public string Nombre { get; set; } = "Cuchillo de combate";
+    public string Tipo { get; set; } = "Cuerpo a cuerpo";
+
+    public float Rango { get; set; } = 2f;
+    public int Balas { get; set; } = 0;
+    public float DanoPorBala { get; set; } = 50f;
+    public float VelocidadPorBala { get; set; } = 0f;
+    public float Recoil { get; set; } = 0f;
+    public float Precision { get; set; } = 1f;
+}
