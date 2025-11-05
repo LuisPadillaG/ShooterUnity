@@ -23,7 +23,7 @@ public class Zombie : MonoBehaviour
         rotacion = Vector3.zero;
         posicion = this.transform.position;
         puntosMiZombie = 50;
-        zombieFar_uno = this.transform.GetChild(1).GetChild(0).GetChild(1).GetComponent<AudioSource>() ;
+        zombieFar_uno = this.transform.GetChild(1).GetChild(0).GetChild(0).GetComponent<AudioSource>() ;
         // calculo de datos MiZomnbie
         for (int i = 0; i < datosJugador.RondaActual; i++) {
             Debug.Log("Zombie de la ronda "+ i);
