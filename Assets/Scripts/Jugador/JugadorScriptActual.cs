@@ -151,14 +151,16 @@ public class JugadorScriptActual : MonoBehaviour
             Debug.Log("Usando arma: " + arma.Nombre + " con " + arma.Balas + " balas.");
 
         }
-        if (Input.GetKeyDown(KeyCode.Alpha2))
+        if(datosJugador.armasJugador.Count > 1)
         {
-            datosJugador.armaActual = 1;
-            countdownTiempoPorBala = datosJugador.armasJugador[datosJugador.armaActual].VelocidadPorBala;
-            I_Armas arma = datosJugador.armasJugador[datosJugador.armaActual];
-            Debug.Log("Usando arma: " + arma.Nombre + " con " + arma.Balas + " balas.");
-
-        }
+            if (Input.GetKeyDown(KeyCode.Alpha2))
+            {
+                datosJugador.armaActual = 1;
+                countdownTiempoPorBala = datosJugador.armasJugador[datosJugador.armaActual].VelocidadPorBala;
+                I_Armas arma = datosJugador.armasJugador[datosJugador.armaActual];
+                Debug.Log("Usando arma: " + arma.Nombre + " con " + arma.Balas + " balas.");
+            }
+        } 
         if (Input.GetKeyDown(KeyCode.Alpha3))
         {
             datosJugador.armaActual = 2;
