@@ -13,7 +13,7 @@ public class Zombie : MonoBehaviour
     Animator zombieAnimator;
     float puntosMiZombie;
     float velocidadZombie;
-    //AudioSource zombieFar_uno;
+    AudioSource zombieFar_uno;
     NavMeshAgent navMeshAgent;
     bool calculoSobreDatosJugador, variabledos; //puse esto para que tenga un frame extra en reconocer toda la informacion en datos Jugador, ya que antes no me lo dejaba. Por eso lo hacemos una funcion
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -31,7 +31,7 @@ public class Zombie : MonoBehaviour
         //posicion = this.transform.position;
         navMeshAgent = this.GetComponent<NavMeshAgent>();
         puntosMiZombie = 50;
-        //zombieFar_uno = this.transform.GetChild(1).GetChild(0).GetChild(0).GetComponent<AudioSource>();
+        zombieFar_uno = this.transform.GetChild(1).GetChild(0).GetChild(0).GetComponent<AudioSource>();
         //calculo sobre ronda respecto al zombie
         calculoSobreDatosJugador = true;
         variabledos = true;
@@ -90,7 +90,7 @@ public class Zombie : MonoBehaviour
                 puntosMiZombie += puntosMiZombie * 0.1f; 
             }
         }
-        //zombieFar_uno.Play();
+        zombieFar_uno.Play();
         //calculoSobreDatosJugador = false;
         Debug.Log("zombie creado con vida " + puntosMiZombie);
     }
