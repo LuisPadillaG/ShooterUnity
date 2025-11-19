@@ -50,6 +50,7 @@ public class JugadorScriptActual : MonoBehaviour
     void Start()
     {
         DatosJuego = GameObject.Find("DatosJuego");
+        Debug.Log(DatosJuego.gameObject.name);
         datosJugador = DatosJuego.GetComponent<DatosJugador>();
 
         agachado = false;
@@ -74,6 +75,7 @@ public class JugadorScriptActual : MonoBehaviour
         Cursor.lockState = CursorLockMode.Locked;
         // armas
         datosJugador.armaActual = 1;
+        Debug.Log("hola si estoy funcionado");
         datosJugador.armasJugador.Add(new M1911());
         datosJugador.armasJugador.Add(new AK47());
         countdownTiempoPorBala = datosJugador.armasJugador[datosJugador.armaActual].VelocidadPorBala;

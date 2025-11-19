@@ -2,7 +2,7 @@ using Unity.Burst.Intrinsics;
 using UnityEngine;
 
 // PISTOLAS
-public class M1911 : MonoBehaviour, I_Armas
+public class M1911 : I_Armas
 {
     public int ID { get; set; } = 0;
     public string Nombre { get; set; } = "M1911";
@@ -16,7 +16,7 @@ public class M1911 : MonoBehaviour, I_Armas
     public float Recoil { get; set; } = 0.2f;
     public float Precision { get; set; } = 0.9f;
 }
-public class B23R : MonoBehaviour, I_Armas
+public class B23R : I_Armas
 {
     public int ID { get; set; } = 1;
     public string Nombre { get; set; } = "B23R";
@@ -30,7 +30,7 @@ public class B23R : MonoBehaviour, I_Armas
     public float Precision { get; set; } = 0.8f;
 }
 // ESCOPETAS
-public class Remington870 : MonoBehaviour, I_Armas
+public class Remington870 : I_Armas
 {
     public int ID { get; set; } = 2;
     public string Nombre { get; set; } = "Remington 870";
@@ -44,7 +44,7 @@ public class Remington870 : MonoBehaviour, I_Armas
     public float Precision { get; set; } = 0.7f;
 }
 
-public class SPAS12 : MonoBehaviour, I_Armas
+public class SPAS12 :I_Armas
 {
     public int ID { get; set; } = 3;
     public string Nombre { get; set; } = "SPAS-12";
@@ -58,7 +58,7 @@ public class SPAS12 : MonoBehaviour, I_Armas
     public float Precision { get; set; } = 0.75f;
 }
 // SUBFUSILES
-public class MP5 : MonoBehaviour, I_Armas
+public class MP5 : I_Armas
 {
     public int ID { get; set; } = 4;
     public string Nombre { get; set; } = "MP5";
@@ -72,7 +72,7 @@ public class MP5 : MonoBehaviour, I_Armas
     public float Precision { get; set; } = 0.85f;
 }
 
-public class Uzi : MonoBehaviour, I_Armas
+public class Uzi : I_Armas
 {
     public int ID { get; set; } = 5;
     public string Nombre { get; set; } = "Uzi";
@@ -86,7 +86,7 @@ public class Uzi : MonoBehaviour, I_Armas
     public float Precision { get; set; } = 0.75f;
 }
 // RIFLE DE ASALTO
-public class AK47 : MonoBehaviour, I_Armas
+public class AK47 : I_Armas
 {
     public int ID { get; set; } = 6;
     public string Nombre { get; set; } = "AK-47";
@@ -100,7 +100,7 @@ public class AK47 : MonoBehaviour, I_Armas
     public float Precision { get; set; } = 0.8f;
 }
 
-public class M16 : MonoBehaviour, I_Armas
+public class M16 :I_Armas
 {
     public int ID { get; set; } = 7;
     public string Nombre { get; set; } = "M16";
@@ -114,7 +114,7 @@ public class M16 : MonoBehaviour, I_Armas
     public float Precision { get; set; } = 0.9f;
 }
 // KABOOOM
-public class GranadaFragmentacion : MonoBehaviour, I_Armas
+public class GranadaFragmentacion : I_Armas
 {
     public int ID { get; set; } = 8;
     public string Nombre { get; set; } = "Granada de fragmentación";
@@ -128,7 +128,7 @@ public class GranadaFragmentacion : MonoBehaviour, I_Armas
     public float Precision { get; set; } = 0.9f;
 }
 
-public class Molotov : MonoBehaviour, I_Armas
+public class Molotov : I_Armas
 {
     public int ID { get; set; } = 9;
     public string Nombre { get; set; } = "Molotov";
@@ -142,7 +142,7 @@ public class Molotov : MonoBehaviour, I_Armas
     public float Precision { get; set; } = 0.8f;
 }
 
-public class MonkeyBombs : MonoBehaviour, I_Armas
+public class MonkeyBombs : I_Armas
 {
     public int ID { get; set; } = 10;
     public string Nombre { get; set; } = "Monkey Bombs";
@@ -157,7 +157,7 @@ public class MonkeyBombs : MonoBehaviour, I_Armas
 }
 
 // ARMAS ESPECIALES
-public class RayGun : MonoBehaviour, I_Armas
+public class RayGun :I_Armas
 {
     public int ID { get; set; } = 11;
     public string Nombre { get; set; } = "Ray Gun";
@@ -172,7 +172,7 @@ public class RayGun : MonoBehaviour, I_Armas
 }
 
 // CUERPO A CUERPO
-public class CuchilloCombate : MonoBehaviour, I_Armas
+public class CuchilloCombate :I_Armas
 {
     public int ID { get; set; } = 12;
     public string Nombre { get; set; } = "Cuchillo de combate";
