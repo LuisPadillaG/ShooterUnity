@@ -1717,7 +1717,7 @@ MonoBehaviour:
   m_PrefabInstance: {fileID: 0}
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 261414967}
-  m_Enabled: 0
+  m_Enabled: 1
   m_EditorHideFlags: 0
   m_Script: {fileID: 11500000, guid: 7a5ac11cc976e418e8d13136b07e1f52, type: 3}
   m_Name: 
@@ -5775,7 +5775,7 @@ Transform:
   m_GameObject: {fileID: 835473613}
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -29.953382, y: 5.6682453, z: 6.063019}
+  m_LocalPosition: {x: 3.13, y: -0, z: 6.063019}
   m_LocalScale: {x: 1.4419, y: 1.4419, z: 1.4419}
   m_ConstrainProportionsScale: 0
   m_Children:
@@ -7773,6 +7773,51 @@ Transform:
   m_CorrespondingSourceObject: {fileID: -8679921383154817045, guid: 405b971766897e24e8966276c62306cf, type: 3}
   m_PrefabInstance: {fileID: 501109874}
   m_PrefabAsset: {fileID: 0}
+--- !u!1 &1183325075
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1183325076}
+  - component: {fileID: 1183325077}
+  m_Layer: 0
+  m_Name: CreadorZombie
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1183325076
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1183325075}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 14.77, y: 0.93, z: 1.54013}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1183325077
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1183325075}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e7412943da943f345b02eaecc0fdc9e5, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  prefabZombie: {fileID: 5666602192261302948, guid: efa9c6f7bc154eb489bd37b47c5ee935, type: 3}
 --- !u!1 &1191080856 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: -424309132451759183, guid: 353f30ee39c83504594534cc5f24970a, type: 3}
@@ -8514,6 +8559,37 @@ PrefabInstance:
     m_AddedGameObjects: []
     m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: c608441653ee12843a6c3460db40b8fc, type: 3}
+--- !u!1 &1279973388
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 1279973389}
+  m_Layer: 0
+  m_Name: OBJETOCOMMITPRUEBA
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &1279973389
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1279973388}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 15.36077, y: -0.25951, z: -1.83656}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &1287042916
 GameObject:
   m_ObjectHideFlags: 0
@@ -10763,7 +10839,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   vida: 100
   armaActual: 0
-  RondaActual: 1
+  RondaActual: 3
   kills: 0
 --- !u!4 &1613378215
 Transform:
@@ -20989,3 +21065,5 @@ SceneRoots:
   - {fileID: 2133710758}
   - {fileID: 597540432}
   - {fileID: 501109874}
+  - {fileID: 1183325076}
+  - {fileID: 1279973389}
