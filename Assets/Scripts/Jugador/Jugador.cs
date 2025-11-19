@@ -5,10 +5,7 @@ using UnityEngine;
 using UnityEngine.SceneManagement;
 
 public class Jugador : MonoBehaviour
-{
-    //public GameObject prefabZombie;
-
-
+{ 
     GameObject DatosJuego;
     DatosJugador datosJugador;
     CharacterController characterController;
@@ -69,10 +66,11 @@ public class Jugador : MonoBehaviour
         velocidadCamara = Vector3.zero;
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Locked;
-        // armas
+        // ========= armas e info del jugador =============
         datosJugador.armaActual = 1;
         datosJugador.armasJugador.Add(new M1911());
         datosJugador.armasJugador.Add(new AK47());
+        datosJugador.kills = 0;
         countdownTiempoPorBala = datosJugador.armasJugador[datosJugador.armaActual].VelocidadPorBala;
         //================ efectos de sonido ===============
         pasoDerecho = this.transform.GetChild(2).GetChild(0).GetComponent<AudioSource>();
@@ -97,7 +95,7 @@ public class Jugador : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.R))
         {
-            SceneManager.LoadScene("Echos_FPS");
+            SceneManager.LoadScene("PruebasConMapa");
         }
         // Movimiento
         if (Input.GetKey(KeyCode.LeftShift))
@@ -183,7 +181,7 @@ public class Jugador : MonoBehaviour
             {
                 countdownTiempoPorBala = datosJugador.armasJugador[datosJugador.armaActual].VelocidadPorBala;
             }
-            if (countdownTiempoPorBala == datosJugador.armasJugador[datosJugador.armaActual].VelocidadPorBala) {
+            if (countdownTiempoPorBala >= datosJugador.armasJugador[datosJugador.armaActual].VelocidadPorBala) {
                 if (Physics.Raycast(camara.transform.position, direccionCamara, out hit, 15))
                 {
                     velocidadCamara.x = -70;
@@ -196,6 +194,7 @@ public class Jugador : MonoBehaviour
                         {
                             Debug.Log("se esta ejecutando esto");
                             zombie.RecibirDisparo(datosJugador.armasJugador[datosJugador.armaActual].DanoPorBala);
+                            
                         }
                     }
                     switch (datosJugador.armasJugador[datosJugador.armaActual].ID)

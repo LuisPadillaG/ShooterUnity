@@ -5,14 +5,16 @@ public class Zombie : MonoBehaviour
 {
     DatosJugador datosJugador;
     GameObject jugador;
+    public GameObject prefabZombieMuerto;
     Vector3 rotacion;
     //Vector3 posicion;
     GameObject modelo, DatosJuego;
     Animator zombieAnimator;
-    public float puntosMiZombie;
+    float puntosMiZombie;
     float velocidadZombie;
     AudioSource zombieFar_uno;
     NavMeshAgent navMeshAgent;
+    bool calculoSobreDatosJugador; //puse esto para que tenga un frame extra en reconocer toda la informacion en datos Jugador, ya que antes no me lo dejaba. Por eso lo hacemos una funcion
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
@@ -28,28 +30,19 @@ public class Zombie : MonoBehaviour
         navMeshAgent = this.GetComponent<NavMeshAgent>();
         puntosMiZombie = 50;
         zombieFar_uno = this.transform.GetChild(1).GetChild(0).GetChild(0).GetComponent<AudioSource>();
-        // calculo de datos MiZombie 
-        for (int i = 0; i < datosJugador.RondaActual; i++) {
-            Debug.Log("Zombie de la ronda "+ i);
-            puntosMiZombie += 100;
-            if(i > 5)
-            {
-                velocidadZombie = 1.6f;
-            }
-            if(i == 10) 
-                break;
-        }
-        if(datosJugador.RondaActual > 9)
-        {
-            velocidadZombie = 3f;
-            puntosMiZombie += + (puntosMiZombie * 0.1f);
-        }
-        zombieFar_uno.Play();
+        //calculo sobre ronda respecto al zombie
+        calculoSobreDatosJugador = true;
+        navMeshAgent.speed = velocidadZombie;
+        
     }
 
     // Update is called once per frame
     void Update()
     {
+        if (calculoSobreDatosJugador)
+        {
+            CalcularDatosZombie();
+        }
         this.transform.rotation = Quaternion.Euler(rotacion);
         rotacion.y = HerramientasGenericas.CalcularAnguloBidimensional(new Vector2(this.transform.position.x, this.transform.position.z), new Vector2(jugador.transform.position.x, jugador.transform.position.z));
 
@@ -72,11 +65,42 @@ public class Zombie : MonoBehaviour
          */
         navMeshAgent.SetDestination(jugador.transform.position);
     }
+    public void CalcularDatosZombie()
+    {
+        Debug.Log("CALCULO EJECUTADO");
+        Debug.Log("RONDA = " + datosJugador.RondaActual);
+        for (int i = 1; i <= datosJugador.RondaActual; i++)
+        {
+            puntosMiZombie += 100;
+            if (i > 5 && i <= 9)
+            {
+                velocidadZombie = 1.6f;
+            }
+            if (i > 9)
+            {
+                velocidadZombie = 3f;
+                puntosMiZombie += puntosMiZombie * 0.1f; 
+            }
+        }
+        zombieFar_uno.Play();
+        calculoSobreDatosJugador = false;
+        Debug.Log("zombie creado con vida " + puntosMiZombie);
+    }
     public void RecibirDisparo(float danoDisparo)
     {
         puntosMiZombie -= danoDisparo;
-        zombieAnimator.SetInteger("estado", 2);  
+        //zombieAnimator.SetInteger("estado", 2);  
         Debug.Log("Zombie recibió un disparo. Vida restante: " + puntosMiZombie);
+        if(puntosMiZombie <= 0)
+        {
+            ZombieEliminado();
+        }
+    }
+    public void ZombieEliminado()
+    {
+        Debug.Log("zombie eliminadoooooooo");
+        Instantiate(prefabZombieMuerto, this.transform.position, this.transform.rotation);
+        Destroy(this.gameObject);
     }
     // tutorial para las particulas de la niebla: https://youtu.be/8pgi1TBGCKM?si=lwtmWtJ4o1i1UxE6
 }
