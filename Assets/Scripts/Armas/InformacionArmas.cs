@@ -11,7 +11,7 @@ public class M1911 : I_Armas
 
     public float Rango { get; set; } = 25f;
     public int Balas { get; set; } = 8;
-    public float DanoPorBala { get; set; } = 15f;
+    public float DanoPorBala { get; set; } = 20f;
     public float VelocidadPorBala { get; set; } = 0.2f;
     public float Recoil { get; set; } = 0.2f;
     public float Precision { get; set; } = 0.9f;
@@ -24,7 +24,7 @@ public class B23R : I_Armas
     public string Tipo { get; set; } = "Pistolas";
     public float Rango { get; set; } = 30f;
     public int Balas { get; set; } = 15;
-    public float DanoPorBala { get; set; } = 25f;
+    public float DanoPorBala { get; set; } = 150f;
     public float VelocidadPorBala { get; set; } = 80f;
     public float Recoil { get; set; } = 0.4f;
     public float Precision { get; set; } = 0.8f;
@@ -37,8 +37,8 @@ public class Remington870 : I_Armas
     public string Tipo { get; set; } = "Escopetas";
 
     public float Rango { get; set; } = 12f;
-    public int Balas { get; set; } = 6;
-    public float DanoPorBala { get; set; } = 40f;
+    public int Balas { get; set; } = 8;
+    public float DanoPorBala { get; set; } = 300f;
     public float VelocidadPorBala { get; set; } = 55f;
     public float Recoil { get; set; } = 0.6f;
     public float Precision { get; set; } = 0.7f;
@@ -51,8 +51,8 @@ public class SPAS12 :I_Armas
     public string Tipo { get; set; } = "Escopetas";
 
     public float Rango { get; set; } = 10f;
-    public int Balas { get; set; } = 8;
-    public float DanoPorBala { get; set; } = 30f;
+    public int Balas { get; set; } = 12;
+    public float DanoPorBala { get; set; } = 160f;
     public float VelocidadPorBala { get; set; } = 60f;
     public float Recoil { get; set; } = 0.4f;
     public float Precision { get; set; } = 0.75f;
@@ -66,7 +66,7 @@ public class MP5 : I_Armas
 
     public float Rango { get; set; } = 40f;
     public int Balas { get; set; } = 30;
-    public float DanoPorBala { get; set; } = 20f;
+    public float DanoPorBala { get; set; } = 100f;
     public float VelocidadPorBala { get; set; } = 90f;
     public float Recoil { get; set; } = 0.25f;
     public float Precision { get; set; } = 0.85f;
@@ -79,8 +79,8 @@ public class Uzi : I_Armas
     public string Tipo { get; set; } = "Subfusiles";
 
     public float Rango { get; set; } = 35f;
-    public int Balas { get; set; } = 32;
-    public float DanoPorBala { get; set; } = 18f;
+    public int Balas { get; set; } = 24;
+    public float DanoPorBala { get; set; } = 100f;
     public float VelocidadPorBala { get; set; } = 95f;
     public float Recoil { get; set; } = 0.35f;
     public float Precision { get; set; } = 0.75f;
@@ -90,11 +90,10 @@ public class AK47 : I_Armas
 {
     public int ID { get; set; } = 6;
     public string Nombre { get; set; } = "AK-47";
-    public string Tipo { get; set; } = "Rifles de asalto";
-
+    public string Tipo { get; set; } = "Rifles de asalto"; 
     public float Rango { get; set; } = 60f;
-    public int Balas { get; set; } = 30;
-    public float DanoPorBala { get; set; } = 35f;
+    public int Balas { get; set; } = 35;
+    public float DanoPorBala { get; set; } = 120f;
     public float VelocidadPorBala { get; set; } = 0.1f;
     public float Recoil { get; set; } = 0.5f;
     public float Precision { get; set; } = 0.8f;
@@ -108,9 +107,9 @@ public class M16 :I_Armas
 
     public float Rango { get; set; } = 65f;
     public int Balas { get; set; } = 30;
-    public float DanoPorBala { get; set; } = 28f;
+    public float DanoPorBala { get; set; } = 120f;
     public float VelocidadPorBala { get; set; } = 105f;
-    public float Recoil { get; set; } = 0.3f;
+    public float Recoil { get; set; } = 0.1f;
     public float Precision { get; set; } = 0.9f;
 }
 // KABOOOM
@@ -165,7 +164,7 @@ public class RayGun :I_Armas
 
     public float Rango { get; set; } = 100f;
     public int Balas { get; set; } = 20;
-    public float DanoPorBala { get; set; } = 90f;
+    public float DanoPorBala { get; set; } = 1500f;
     public float VelocidadPorBala { get; set; } = 200f;
     public float Recoil { get; set; } = 0.4f;
     public float Precision { get; set; } = 0.95f;

@@ -11,7 +11,7 @@ public class DatosJugador : MonoBehaviour
     public int kills;
     public void Start()
     {
-        armasJugador = new List<I_Armas>();
+        
         Debug.Log("nose un mensaje");
     }
 }

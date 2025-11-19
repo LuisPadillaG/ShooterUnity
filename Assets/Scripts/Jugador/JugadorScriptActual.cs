@@ -76,6 +76,7 @@ public class JugadorScriptActual : MonoBehaviour
         // armas
         datosJugador.armaActual = 1;
         Debug.Log("hola si estoy funcionado");
+        datosJugador.armasJugador = new List<I_Armas>();
         datosJugador.armasJugador.Add(new M1911());
         datosJugador.armasJugador.Add(new AK47());
         countdownTiempoPorBala = datosJugador.armasJugador[datosJugador.armaActual].VelocidadPorBala;
@@ -102,7 +103,7 @@ public class JugadorScriptActual : MonoBehaviour
     {
         if (Input.GetKeyDown(KeyCode.R))
         {
-            SceneManager.LoadScene("Echos_FPS");
+            SceneManager.LoadScene("PruebasConMapa");
         }
         // Movimiento
         if (Input.GetKey(KeyCode.LeftShift))
@@ -206,6 +207,15 @@ public class JugadorScriptActual : MonoBehaviour
                         {
                             Debug.Log("se esta ejecutando esto");
                             zombie.RecibirDisparo(datosJugador.armasJugador[datosJugador.armaActual].DanoPorBala);
+                        }
+                    }
+                    if (hit.collider.gameObject.tag == "ZombieHead")
+                    {
+                        Zombie zombie = hit.collider.GetComponentInParent<Zombie>();
+                        if (zombie != null)
+                        {
+                            Debug.Log("se esta ejecutando esto");
+                            zombie.RecibirDisparo(datosJugador.armasJugador[datosJugador.armaActual].DanoPorBala * 2);
                         }
                     }
                     switch (datosJugador.armasJugador[datosJugador.armaActual].ID)

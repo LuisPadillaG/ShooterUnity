@@ -1,3 +1,4 @@
+
 using UnityEngine;
 using UnityEngine.AI;
 
@@ -12,12 +13,13 @@ public class Zombie : MonoBehaviour
     Animator zombieAnimator;
     float puntosMiZombie;
     float velocidadZombie;
-    AudioSource zombieFar_uno;
+    //AudioSource zombieFar_uno;
     NavMeshAgent navMeshAgent;
-    bool calculoSobreDatosJugador; //puse esto para que tenga un frame extra en reconocer toda la informacion en datos Jugador, ya que antes no me lo dejaba. Por eso lo hacemos una funcion
+    bool calculoSobreDatosJugador, variabledos; //puse esto para que tenga un frame extra en reconocer toda la informacion en datos Jugador, ya que antes no me lo dejaba. Por eso lo hacemos una funcion
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
+        Debug.Log("se ejecuto el primer start");
         // variables
         velocidadZombie = 1.3f;
         DatosJuego = GameObject.Find("DatosJuego");
@@ -29,20 +31,26 @@ public class Zombie : MonoBehaviour
         //posicion = this.transform.position;
         navMeshAgent = this.GetComponent<NavMeshAgent>();
         puntosMiZombie = 50;
-        zombieFar_uno = this.transform.GetChild(1).GetChild(0).GetChild(0).GetComponent<AudioSource>();
+        //zombieFar_uno = this.transform.GetChild(1).GetChild(0).GetChild(0).GetComponent<AudioSource>();
         //calculo sobre ronda respecto al zombie
         calculoSobreDatosJugador = true;
+        variabledos = true;
         navMeshAgent.speed = velocidadZombie;
-        
+        Debug.Log("asi mensaje");
+        CalcularDatosZombie();
     }
 
     // Update is called once per frame
     void Update()
     {
-        if (calculoSobreDatosJugador)
+        //Debug.Log("puntos de salud actual" + puntosMiZombie);
+        //Debug.Log(variabledos);
+        /*if (variabledos)
         {
+            Debug.Log("Se esta ejecutanhdo calculio sobre datosmjugador");
             CalcularDatosZombie();
-        }
+        }*/
+
         this.transform.rotation = Quaternion.Euler(rotacion);
         rotacion.y = HerramientasGenericas.CalcularAnguloBidimensional(new Vector2(this.transform.position.x, this.transform.position.z), new Vector2(jugador.transform.position.x, jugador.transform.position.z));
 
@@ -82,15 +90,15 @@ public class Zombie : MonoBehaviour
                 puntosMiZombie += puntosMiZombie * 0.1f; 
             }
         }
-        zombieFar_uno.Play();
-        calculoSobreDatosJugador = false;
+        //zombieFar_uno.Play();
+        //calculoSobreDatosJugador = false;
         Debug.Log("zombie creado con vida " + puntosMiZombie);
     }
     public void RecibirDisparo(float danoDisparo)
     {
         puntosMiZombie -= danoDisparo;
         //zombieAnimator.SetInteger("estado", 2);  
-        Debug.Log("Zombie recibió un disparo. Vida restante: " + puntosMiZombie);
+        //Debug.Log("Zombie recibió un disparo. Vida restante: " + puntosMiZombie);
         if(puntosMiZombie <= 0)
         {
             ZombieEliminado();
@@ -98,7 +106,7 @@ public class Zombie : MonoBehaviour
     }
     public void ZombieEliminado()
     {
-        Debug.Log("zombie eliminadoooooooo");
+        //Debug.Log("zombie eliminadoooooooo");
         Instantiate(prefabZombieMuerto, this.transform.position, this.transform.rotation);
         Destroy(this.gameObject);
     }
