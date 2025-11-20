@@ -33,11 +33,12 @@ public class Zombie : MonoBehaviour
         puntosMiZombie = 50;
         zombieFar_uno = this.transform.GetChild(1).GetChild(0).GetChild(0).GetComponent<AudioSource>();
         //calculo sobre ronda respecto al zombie
+        CalcularDatosZombie();
         calculoSobreDatosJugador = true;
         variabledos = true;
         navMeshAgent.speed = velocidadZombie;
         Debug.Log("asi mensaje");
-        CalcularDatosZombie();
+        
     }
 
     // Update is called once per frame
