@@ -1,5 +1,6 @@
 
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEditor.Rendering;
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -323,4 +324,12 @@ public class JugadorScriptActual : MonoBehaviour
         }
         // ----------------------------------------- Fin animaciones
     }
+    private void OnCollisionEnter(Collision collision)
+    {
+        if(collision.gameObject.tag == "Zombie" || collision.gameObject.tag == "ZombieHead")
+        {
+            Debug.Log("Me electrocutaste pedrito");
+        }
+    }
+    
 }

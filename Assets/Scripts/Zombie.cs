@@ -5,7 +5,7 @@ using UnityEngine.AI;
 public class Zombie : MonoBehaviour
 {
     DatosJugador datosJugador;
-    GameObject jugador;
+    GameObject jugador; 
     public GameObject prefabZombieMuerto;
     Vector3 rotacion;
     //Vector3 posicion;
@@ -15,30 +15,28 @@ public class Zombie : MonoBehaviour
     float velocidadZombie;
     AudioSource zombieFar_uno;
     NavMeshAgent navMeshAgent;
-    bool calculoSobreDatosJugador, variabledos; //puse esto para que tenga un frame extra en reconocer toda la informacion en datos Jugador, ya que antes no me lo dejaba. Por eso lo hacemos una funcion
+    bool isHitting; 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
-        Debug.Log("se ejecuto el primer start");
+       // Debug.Log("se ejecuto el primer start");
         // variables
         velocidadZombie = 1.3f;
         DatosJuego = GameObject.Find("DatosJuego");
         datosJugador = DatosJuego.GetComponent<DatosJugador>();
         modelo = this.transform.GetChild(0).gameObject;
         zombieAnimator = modelo.GetComponent<Animator>();
-        jugador = GameObject.FindGameObjectWithTag("Player");
+        jugador = GameObject.FindGameObjectWithTag("Player"); 
         rotacion = Vector3.zero;
         //posicion = this.transform.position;
         navMeshAgent = this.GetComponent<NavMeshAgent>();
         puntosMiZombie = 50;
         zombieFar_uno = this.transform.GetChild(1).GetChild(0).GetChild(0).GetComponent<AudioSource>();
         //calculo sobre ronda respecto al zombie
-        CalcularDatosZombie();
-        calculoSobreDatosJugador = true;
-        variabledos = true;
+        CalcularDatosZombie(); 
         navMeshAgent.speed = velocidadZombie;
-        Debug.Log("asi mensaje");
-        
+        //Debug.Log("asi mensaje");
+        isHitting = false;
     }
 
     // Update is called once per frame
@@ -54,25 +52,50 @@ public class Zombie : MonoBehaviour
 
         this.transform.rotation = Quaternion.Euler(rotacion);
         rotacion.y = HerramientasGenericas.CalcularAnguloBidimensional(new Vector2(this.transform.position.x, this.transform.position.z), new Vector2(jugador.transform.position.x, jugador.transform.position.z));
+        navMeshAgent.SetDestination(jugador.transform.position);
+        // Pegar
+        isHitting = false;
+        float distancia = navMeshAgent.remainingDistance;
+        if (!navMeshAgent.pathPending && distancia <= 2.2f)
+        {
+            Debug.Log("El zombie está cerca del jugador!");
+            isHitting = true;
+        }
 
         /*posicion.x += Mathf.Cos(rotacion.y * Mathf.Deg2Rad) * Time.deltaTime * velocidadZombie;
         posicion.z -= Mathf.Sin(rotacion.y * Mathf.Deg2Rad) * Time.deltaTime * velocidadZombie;
         this.transform.position = posicion;*/
         // Animaciones
-        if(velocidadZombie == 1.3f || velocidadZombie == 1.6f) //caminando, caminando rapido
+        if (!isHitting)
         {
-            zombieAnimator.SetInteger("EstadoZombie", 0);
+            if (velocidadZombie == 1.3f || velocidadZombie == 1.6f) //caminando, caminando rapido
+            {
+                zombieAnimator.SetInteger("EstadoZombie", 0);
+            }
+            else
+            {
+                zombieAnimator.SetInteger("EstadoZombie", 1);
+            }
         }
         else
         {
-            zombieAnimator.SetInteger("EstadoZombie", 1);
+            if (isHitting)
+            {
+                zombieAnimator.SetInteger("EstadoZombie", 3);
+            }
         }
         // lo que sigue del zombie
         /*
         1. Golpe de brazo + animación 
         2. Recibir balazo
          */
-        navMeshAgent.SetDestination(jugador.transform.position);
+        
+    }
+    private void OnTriggerEnter(Collider other)
+    {
+        if(other.gameObject.tag == "ColliderJugador"){
+            Debug.Log("Estamos chocanco con el collider");
+        }
     }
     public void CalcularDatosZombie()
     {
@@ -98,7 +121,7 @@ public class Zombie : MonoBehaviour
     public void RecibirDisparo(float danoDisparo)
     {
         puntosMiZombie -= danoDisparo;
-        //zombieAnimator.SetInteger("estado", 2);  
+        zombieAnimator.SetInteger("estado", 2);  
         //Debug.Log("Zombie recibió un disparo. Vida restante: " + puntosMiZombie);
         if(puntosMiZombie <= 0)
         {
