@@ -121,7 +121,7 @@ public class JugadorScriptActual : MonoBehaviour
         {
             if (Input.GetButtonDown("Jump"))
             {
-                velocidad.y = 10;
+                velocidad.y = 7.5f;
             }
             //Debug.Log(velocidadAgachado);
         }
