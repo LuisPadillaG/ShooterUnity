@@ -45,6 +45,8 @@ public class JugadorScriptActual : MonoBehaviour
 
     // objetos publicos (armas)
     public GameObject AK47;
+    public GameObject Pistola;
+    Animator animator_Pistola;
     // golpe de zombie
     public Volume globalVolume;  
     Vignette vignette;
@@ -89,6 +91,7 @@ public class JugadorScriptActual : MonoBehaviour
         datosJugador.armasJugador = new List<I_Armas>();
         datosJugador.armasJugador.Add(new M1911());
         datosJugador.armasJugador.Add(new AK47());
+        animator_Pistola = Pistola.transform.GetChild(0).GetComponent<Animator>();
         countdownTiempoPorBala = datosJugador.armasJugador[datosJugador.armaActual].VelocidadPorBala;
         //================ efectos de sonido ===============
         pasoDerecho = this.transform.GetChild(2).GetChild(0).GetComponent<AudioSource>();
@@ -245,6 +248,7 @@ public class JugadorScriptActual : MonoBehaviour
                         if (zombie != null)
                         {
                             Debug.Log("se esta ejecutando esto");
+                            datosJugador.puntos += 10;
                             zombie.RecibirDisparo(datosJugador.armasJugador[datosJugador.armaActual].DanoPorBala);
                         }
                     }
@@ -254,7 +258,8 @@ public class JugadorScriptActual : MonoBehaviour
                         if (zombie != null)
                         {
                             Debug.Log("se esta ejecutando esto");
-                            zombie.RecibirDisparo(datosJugador.armasJugador[datosJugador.armaActual].DanoPorBala * 2);
+                            datosJugador.puntos += 20;
+                            zombie.RecibirDisparoCabeza(datosJugador.armasJugador[datosJugador.armaActual].DanoPorBala);
                         }
                     }
                     switch (datosJugador.armasJugador[datosJugador.armaActual].ID)
@@ -293,9 +298,11 @@ public class JugadorScriptActual : MonoBehaviour
             estadoObjetivo = 0;
             caminataActiva = false;
             corridaActiva = false;
+            animator_Pistola.SetInteger("EstaCaminando", 0);
         }
         else
         {
+            animator_Pistola.SetInteger("EstaCaminando", 1);
             estadoObjetivo = 1;
             caminataActiva = true;
             if (Input.GetKey(KeyCode.LeftShift) && characterController.isGrounded)
@@ -392,7 +399,14 @@ public class JugadorScriptActual : MonoBehaviour
             golpeado_recientemente = true;
         }
     }
+    public void CompraNuevaArma(I_Armas armaEnviada)
+    {
 
+        /*switch (armaEnviada.ID)
+        {
+           case
+        }*/
+    }
 
 
 }

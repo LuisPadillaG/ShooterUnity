@@ -21,5 +21,16 @@ public class HerramientasGenericas : MonoBehaviour
             return 180 - seno * 57.2957795131f;
         }
     }
+    public static Transform BuscarHijo(Transform padre, string nombre)
+    {
+        foreach (Transform hijo in padre)
+        {
+            if (hijo.name == nombre) return hijo;
+
+            Transform encontrado = BuscarHijo(hijo, nombre);
+            if (encontrado != null) return encontrado;
+        }
+        return null;
+    }
 
 }

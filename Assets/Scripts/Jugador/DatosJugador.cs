@@ -8,9 +8,10 @@ public class DatosJugador : MonoBehaviour
     public int armaActual;
     public int RondaActual = 1;
     public int kills;
+    public int puntos = 500;
+    public int headshot_acertados = 0;
     public void Start()
     {
-        
-        Debug.Log("nose un mensaje");
+        Debug.Log(" ======== Se han creado los datos del jugador. Disfruta tu partida =========");
     }
 }

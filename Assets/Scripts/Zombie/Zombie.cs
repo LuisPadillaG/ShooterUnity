@@ -125,6 +125,20 @@ public class Zombie : MonoBehaviour
         //Debug.Log("Zombie recibió un disparo. Vida restante: " + puntosMiZombie);
         if(puntosMiZombie <= 0)
         {
+            datosJugador.puntos += 60;
+            ZombieEliminado();
+        }
+    }
+    public void RecibirDisparoCabeza(float danoDisparo)
+    {
+        datosJugador.headshot_acertados++;
+        danoDisparo= danoDisparo * 2;
+        puntosMiZombie -= danoDisparo;
+        zombieAnimator.SetInteger("estado", 2);
+        //Debug.Log("Zombie recibió un disparo. Vida restante: " + puntosMiZombie);
+        if (puntosMiZombie <= 0)
+        {
+            datosJugador.puntos += 100;
             ZombieEliminado();
         }
     }
