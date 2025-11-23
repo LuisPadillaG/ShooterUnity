@@ -2,7 +2,8 @@
 using System.Collections.Generic; 
 using UnityEngine;
 using UnityEngine.SceneManagement;
-
+using UnityEngine.Rendering;
+using UnityEngine.Rendering.Universal;
 public class JugadorScriptActual : MonoBehaviour
 {
     //public GameObject prefabZombie;
@@ -44,6 +45,16 @@ public class JugadorScriptActual : MonoBehaviour
 
     // objetos publicos (armas)
     public GameObject AK47;
+    // golpe de zombie
+    public Volume globalVolume;  
+    Vignette vignette;
+    float coolDownRecibirDano;
+    bool golpeado_recientemente;
+    //
+    Vector3 retrocesoActual ;
+    float tiempoRetroceso;
+    float duracionRetroceso; // tiempo que dura el retroceso
+    float fuerzaRetroceso; // distancia total del retroceso
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
@@ -95,11 +106,30 @@ public class JugadorScriptActual : MonoBehaviour
         sonidoArma_M1911 = this.transform.GetChild(3).GetChild(0).GetComponent<AudioSource>();
         sonidoArma_ak47 = this.transform.GetChild(3).GetChild(6).GetComponent<AudioSource>();
 
+        //recibir daño
+        globalVolume.profile.TryGet(out vignette);
+        coolDownRecibirDano = 0.4f;
+        golpeado_recientemente = false;
+        retrocesoActual = Vector3.zero;
+        tiempoRetroceso = 0f;
+        duracionRetroceso = 0.2f; 
+        fuerzaRetroceso = 2f;
     }
 
     // Update is called once per frame
     void Update()
     {
+        vignette.intensity.value -= Time.deltaTime * 0.6f;
+        if (golpeado_recientemente)
+        {
+            coolDownRecibirDano -= Time.deltaTime;
+            if(coolDownRecibirDano < 0)
+            {
+                golpeado_recientemente = false;
+                coolDownRecibirDano = 0.4f;
+                Debug.Log("ya le pueden pegar nuevamente");
+            }
+        }
         if (Input.GetKeyDown(KeyCode.R))
         {
             SceneManager.LoadScene("PruebasConMapa");
@@ -130,6 +160,16 @@ public class JugadorScriptActual : MonoBehaviour
         }
 
         // Rotacion version profe
+        if (tiempoRetroceso > 0f)
+        {
+            Vector3 mover = retrocesoActual * (Time.deltaTime / duracionRetroceso); // aplica poco a poco
+            characterController.Move(mover);
+            tiempoRetroceso -= Time.deltaTime;
+            if (tiempoRetroceso <= 0f)
+            {
+                retrocesoActual = Vector3.zero;
+            }
+        }
         objetoRotacionCamara.transform.rotation = camara.transform.rotation;
         objetoRotacionCamara.transform.rotation = Quaternion.Euler(0, objetoRotacionCamara.transform.rotation.eulerAngles.y, 0);
         characterController.Move(objetoRotacionCamara.transform.TransformDirection(velocidad) * Time.deltaTime);
@@ -322,12 +362,37 @@ public class JugadorScriptActual : MonoBehaviour
         }
         // ----------------------------------------- Fin animaciones
     }
-    private void OnCollisionEnter(Collision collision)
+    private void OnControllerColliderHit(ControllerColliderHit hit)
     {
-        if(collision.gameObject.tag == "Zombie" || collision.gameObject.tag == "ZombieHead")
+        if(hit.gameObject.tag == "Zombie" || hit.gameObject.tag == "ZombieHead")
         {
-            Debug.Log("Me electrocutaste pedrito");
+            Debug.Log("Estamos cerca, cuidado");
+            if(vignette.intensity.value <= 0.1f)
+            {
+                vignette.intensity.value = 0.1f;
+            }
         }
     }
-    
+    public void Golpeado()
+    {
+        if (!golpeado_recientemente)
+        {
+            Debug.Log("Me electrocutaste pedrito");
+            datosJugador.vida -= 40;
+            vignette.intensity.value = 0.8f;
+            retrocesoActual = -objetoRotacionCamara.transform.forward * fuerzaRetroceso;
+            tiempoRetroceso = duracionRetroceso;
+
+            if (datosJugador.vida <= 0)
+            {
+                Debug.Log("GAMEEEEEEEEEEEE OVERRRRRRRRRRRRR");
+                SceneManager.LoadScene("GameOver");
+            }
+
+            golpeado_recientemente = true;
+        }
+    }
+
+
+
 }

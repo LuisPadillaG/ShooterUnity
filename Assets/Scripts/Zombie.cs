@@ -58,7 +58,7 @@ public class Zombie : MonoBehaviour
         float distancia = navMeshAgent.remainingDistance;
         if (!navMeshAgent.pathPending && distancia <= 2.2f)
         {
-            Debug.Log("El zombie está cerca del jugador!");
+            //Debug.Log("El zombie está cerca del jugador!");
             isHitting = true;
         }
 
@@ -132,6 +132,7 @@ public class Zombie : MonoBehaviour
     {
         //Debug.Log("zombie eliminadoooooooo");
         Instantiate(prefabZombieMuerto, this.transform.position, this.transform.rotation);
+        datosJugador.kills++;
         Destroy(this.gameObject);
     }
     // tutorial para las particulas de la niebla: https://youtu.be/8pgi1TBGCKM?si=lwtmWtJ4o1i1UxE6
