@@ -8,6 +8,9 @@ public class ControladorUI_Juego : MonoBehaviour
     DatosJugador datosJugador;
     public TMP_Text textoKills;
     public TMP_Text textoPoints;
+    public TMP_Text textoNombreArmaJugador;
+    public TMP_Text textoBalasArmaJugador;
+
     GameObject pressEnter;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -24,6 +27,8 @@ public class ControladorUI_Juego : MonoBehaviour
     {
         textoKills.text = "Kills: " + datosJugador.kills;
         textoPoints.text = "Points: " + datosJugador.puntos;
+        textoNombreArmaJugador.text = "" + datosJugador.armasJugador[datosJugador.armaActual].Nombre;
+        textoBalasArmaJugador.text = "" + datosJugador.armasJugador[datosJugador.armaActual].Balas + "/" + datosJugador.armasJugador[datosJugador.armaActual].MunicionBalas;
     }
     public void ActivarPressEnter()
     {

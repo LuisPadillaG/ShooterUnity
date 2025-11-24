@@ -8,6 +8,7 @@ TagManager:
   - ZombieHead
   - ColliderJugador
   - ZombieAtackArm
+  - CanvaAction
   layers:
   - Default
   - TransparentFX

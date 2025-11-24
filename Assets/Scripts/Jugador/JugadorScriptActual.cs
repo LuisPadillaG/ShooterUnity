@@ -7,8 +7,15 @@ using UnityEngine.Rendering.Universal;
 public class JugadorScriptActual : MonoBehaviour
 {
     //public GameObject prefabZombie;
-
-
+    public GameObject prefabM1619;
+    public GameObject prefabB23R;
+    public GameObject prefabMP5;
+    public GameObject prefabUzi;
+    //ahora rifles
+    public GameObject prefabAK_47;
+    public GameObject prefabRemington;
+    public GameObject prefabM16;
+    public GameObject prefabS12;
     GameObject DatosJuego;
     DatosJugador datosJugador;
     CharacterController characterController;
@@ -28,6 +35,7 @@ public class JugadorScriptActual : MonoBehaviour
     int estadoObjetivo;
     Vector3 velocidadCamara; // recoil
     float countdownTiempoPorBala;
+    public bool disparoActivo; // solo para mis prefabs
     Vector3 velocidadAgachado;
     Vector3 posicionBaseCamara;
 
@@ -41,19 +49,19 @@ public class JugadorScriptActual : MonoBehaviour
     int pieTurno; // 1 pie derecho, 2 pie izquierdo
     AudioSource correrDerecho, correrIzquierda;
     AudioSource saltoMadera, saltoPiso;
-    AudioSource sonidoArma_ak47, sonidoArma_M1911;
+    AudioSource sonidoArma_ak47, sonidoArma_M1911, sonidoArma_B23R, sonidoArma_Remington, sonidoArma_Spas, sonidoArma_MP5, sonidoArma_Uzi, sonidoArma_M16;
 
     // objetos publicos (armas)
     public GameObject AK47;
-    public GameObject Pistola;
-    Animator animator_Pistola;
+    float contadorAnimacionCambioDeArma;
+    GameObject modeloArma;
     // golpe de zombie
     public Volume globalVolume;  
     Vignette vignette;
     float coolDownRecibirDano;
     bool golpeado_recientemente;
     //
-    Vector3 retrocesoActual ;
+    Vector3 retrocesoActual;
     float tiempoRetroceso;
     float duracionRetroceso; // tiempo que dura el retroceso
     float fuerzaRetroceso; // distancia total del retroceso
@@ -86,13 +94,16 @@ public class JugadorScriptActual : MonoBehaviour
         Cursor.visible = false;
         Cursor.lockState = CursorLockMode.Locked;
         // armas
-        datosJugador.armaActual = 1;
+        datosJugador.armaActual = 0;
         Debug.Log("hola si estoy funcionado");
         datosJugador.armasJugador = new List<I_Armas>();
         datosJugador.armasJugador.Add(new M1911());
-        datosJugador.armasJugador.Add(new AK47());
-        animator_Pistola = Pistola.transform.GetChild(0).GetComponent<Animator>();
+        modeloArma = Instantiate(prefabM1619, new Vector3(0,0,0), Quaternion.identity);
+        modeloArma.transform.SetParent(camara.transform, false);
+        //datosJugador.armasJugador.Add(new AK47());
         countdownTiempoPorBala = datosJugador.armasJugador[datosJugador.armaActual].VelocidadPorBala;
+        disparoActivo = false;
+        contadorAnimacionCambioDeArma = 2;
         //================ efectos de sonido ===============
         pasoDerecho = this.transform.GetChild(2).GetChild(0).GetComponent<AudioSource>();
         pasoIzquierdo = this.transform.GetChild(2).GetChild(1).GetComponent<AudioSource>();
@@ -107,7 +118,13 @@ public class JugadorScriptActual : MonoBehaviour
         saltoPiso = this.transform.GetChild(2).GetChild(5).GetComponent<AudioSource>();
         // efectos de sonido - armas
         sonidoArma_M1911 = this.transform.GetChild(3).GetChild(0).GetComponent<AudioSource>();
+        sonidoArma_B23R = this.transform.GetChild(3).GetChild(1).GetComponent<AudioSource>();
+        sonidoArma_Remington = this.transform.GetChild(3).GetChild(2).GetComponent<AudioSource>();
+        sonidoArma_Spas = this.transform.GetChild(3).GetChild(3).GetComponent<AudioSource>();
+        sonidoArma_MP5 = this.transform.GetChild(3).GetChild(4).GetComponent<AudioSource>();
+        sonidoArma_Uzi = this.transform.GetChild(3).GetChild(5).GetComponent<AudioSource>();
         sonidoArma_ak47 = this.transform.GetChild(3).GetChild(6).GetComponent<AudioSource>();
+        sonidoArma_M16 = this.transform.GetChild(3).GetChild(7).GetComponent<AudioSource>();
 
         //recibir daño
         globalVolume.profile.TryGet(out vignette);
@@ -138,6 +155,10 @@ public class JugadorScriptActual : MonoBehaviour
             SceneManager.LoadScene("PruebasConMapa");
         }
         // Movimiento
+        if(contadorAnimacionCambioDeArma < 2)
+        {
+            contadorAnimacionCambioDeArma += Time.deltaTime;
+        }
         if (Input.GetKey(KeyCode.LeftShift))
         {
             puntosVelocidad = 6;
@@ -190,29 +211,23 @@ public class JugadorScriptActual : MonoBehaviour
         // Cambio de arma
         if (Input.GetKeyDown(KeyCode.Alpha1))
         {
+            if(datosJugador.armaActual != 0)
+            {
+                CambioA_Pistola();
+            }
             datosJugador.armaActual = 0;
-            countdownTiempoPorBala = datosJugador.armasJugador[datosJugador.armaActual].VelocidadPorBala;
-            I_Armas arma = datosJugador.armasJugador[datosJugador.armaActual];
-            Debug.Log("Usando arma: " + arma.Nombre + " con " + arma.Balas + " balas.");
-
+            
         }
         if(datosJugador.armasJugador.Count > 1)
         {
             if (Input.GetKeyDown(KeyCode.Alpha2))
             {
+                if (datosJugador.armaActual != 1)
+                {
+                    CambioA_Rifle();
+                }
                 datosJugador.armaActual = 1;
-                countdownTiempoPorBala = datosJugador.armasJugador[datosJugador.armaActual].VelocidadPorBala;
-                I_Armas arma = datosJugador.armasJugador[datosJugador.armaActual];
-                Debug.Log("Usando arma: " + arma.Nombre + " con " + arma.Balas + " balas.");
             }
-        } 
-        if (Input.GetKeyDown(KeyCode.Alpha3))
-        {
-            datosJugador.armaActual = 2;
-            countdownTiempoPorBala = datosJugador.armasJugador[datosJugador.armaActual].VelocidadPorBala;
-            I_Armas arma = datosJugador.armasJugador[datosJugador.armaActual];
-            Debug.Log("Usando arma: " + arma.Nombre + " con " + arma.Balas + " balas.");
-
         }
         // Rango de disparo
         Vector3 direccionCamara = camara.transform.TransformDirection(Vector3.forward);
@@ -228,18 +243,35 @@ public class JugadorScriptActual : MonoBehaviour
 
         //pistola disparo + velocidad
         RaycastHit hit;
-        if (Input.GetMouseButton(0))
+        if (Input.GetMouseButton(0) && datosJugador.armasJugador[datosJugador.armaActual].Balas > 0)
         {
             countdownTiempoPorBala -= Time.deltaTime;
+            disparoActivo = false;
             if (countdownTiempoPorBala < 0)
             {
                 countdownTiempoPorBala = datosJugador.armasJugador[datosJugador.armaActual].VelocidadPorBala;
             }
             if (countdownTiempoPorBala == datosJugador.armasJugador[datosJugador.armaActual].VelocidadPorBala)
             {
+                disparoActivo = true;
                 if (Physics.Raycast(camara.transform.position, direccionCamara, out hit, 15))
                 {
-                    velocidadCamara.x = -70;
+                    //velocidadCamara.x = -70; // esta linea era el recoil generico. Ahora no
+                    velocidadCamara.x = datosJugador.armasJugador[datosJugador.armaActual].Recoil;
+                    datosJugador.armasJugador[datosJugador.armaActual].Balas--;
+                    //Sistema de recarga automatica
+                    if (datosJugador.armasJugador[datosJugador.armaActual].Balas <= 0)
+                    {
+                        if (datosJugador.armasJugador[datosJugador.armaActual].MaximoBalas < datosJugador.armasJugador[datosJugador.armaActual].MunicionBalas) { 
+                            datosJugador.armasJugador[datosJugador.armaActual].Balas = datosJugador.armasJugador[datosJugador.armaActual].MaximoBalas;
+                            datosJugador.armasJugador[datosJugador.armaActual].MunicionBalas -= datosJugador.armasJugador[datosJugador.armaActual].MaximoBalas;
+                        }
+                        else
+                        {
+                            datosJugador.armasJugador[datosJugador.armaActual].Balas += datosJugador.armasJugador[datosJugador.armaActual].MunicionBalas;
+                            datosJugador.armasJugador[datosJugador.armaActual].MunicionBalas = 0;
+                        }
+                    }
                     Debug.Log("le di a " + hit.collider.gameObject.tag);
                     Instantiate(prefabBala, hit.point, Quaternion.identity);
                     if (hit.collider.gameObject.tag == "Zombie")
@@ -268,19 +300,25 @@ public class JugadorScriptActual : MonoBehaviour
                             sonidoArma_M1911.PlayOneShot(sonidoArma_M1911.clip);
                             break;
                         case 1: // B23R
+                            sonidoArma_B23R.PlayOneShot(sonidoArma_B23R.clip);
                             break;
                         case 2: // Remington870
+                            sonidoArma_Remington.PlayOneShot(sonidoArma_Remington.clip);
                             break;
                         case 3: // SPAS12
+                            sonidoArma_Spas.PlayOneShot(sonidoArma_Spas.clip);
                             break;
                         case 4: // MP5
+                            sonidoArma_MP5.PlayOneShot(sonidoArma_MP5.clip);
                             break;
                         case 5: // Uzi
+                            sonidoArma_Uzi.PlayOneShot(sonidoArma_Uzi.clip);
                             break;
                         case 6: // AK47
                             sonidoArma_ak47.PlayOneShot(sonidoArma_ak47.clip);
                             break;
                         case 7: // M16
+                            sonidoArma_M16.PlayOneShot(sonidoArma_M16.clip);
                             break;
                         case 9: // GranadaFragmentacion
                             break;
@@ -298,11 +336,11 @@ public class JugadorScriptActual : MonoBehaviour
             estadoObjetivo = 0;
             caminataActiva = false;
             corridaActiva = false;
-            animator_Pistola.SetInteger("EstaCaminando", 0);
+            
         }
         else
         {
-            animator_Pistola.SetInteger("EstaCaminando", 1);
+            
             estadoObjetivo = 1;
             caminataActiva = true;
             if (Input.GetKey(KeyCode.LeftShift) && characterController.isGrounded)
@@ -401,12 +439,89 @@ public class JugadorScriptActual : MonoBehaviour
     }
     public void CompraNuevaArma(I_Armas armaEnviada)
     {
-
-        /*switch (armaEnviada.ID)
+        Debug.Log("Muchas felicidades que acabas de obtener un arma");
+        Debug.Log("El arma en cuestion se llama: "+armaEnviada.Nombre);
+        if(armaEnviada.Tipo == "Subfusiles" || armaEnviada.Tipo == "Pistolas")
         {
-           case
-        }*/
+            if (datosJugador.armasJugador.Count >= 1)
+            {
+                datosJugador.armasJugador.RemoveAt(0);
+            }
+            datosJugador.armasJugador.Insert(0, armaEnviada);
+            CambioA_Pistola();
+        }else if(armaEnviada.Tipo == "Rifles de asalto" || armaEnviada.Tipo == "Escopetas") {
+            if (datosJugador.armasJugador.Count == 0)
+            {
+                datosJugador.armasJugador.Add(null);
+            }
+            if (datosJugador.armasJugador.Count >= 2)
+            {
+                datosJugador.armasJugador.RemoveAt(1);
+            }
+            if (datosJugador.armasJugador.Count == 1)
+            {
+                datosJugador.armasJugador.Add(armaEnviada);
+            }
+            else
+            {
+                datosJugador.armasJugador.Insert(1, armaEnviada);
+            }
+            CambioA_Rifle();
+        }
     }
-
+    public void CambioA_Pistola()
+    {
+        Destroy(modeloArma);
+        datosJugador.armaActual = 0;
+        switch (datosJugador.armasJugador[datosJugador.armaActual].Nombre)
+        {
+            case "M1911":
+                modeloArma = Instantiate(prefabM1619, new Vector3(0, 0, 0), Quaternion.identity);
+                modeloArma.transform.SetParent(camara.transform, false);
+                break;
+            case "B23R":
+                modeloArma = Instantiate(prefabB23R, new Vector3(0, 0, 0), Quaternion.identity);
+                modeloArma.transform.SetParent(camara.transform, false);
+                break;
+            case "Uzi":
+                modeloArma = Instantiate(prefabUzi, new Vector3(0, 0, 0), Quaternion.identity);
+                modeloArma.transform.SetParent(camara.transform, false);
+                break;
+            case "MP5":
+                modeloArma = Instantiate(prefabMP5, new Vector3(0, 0, 0), Quaternion.identity);
+                modeloArma.transform.SetParent(camara.transform, false);
+                break;
+        }
+        countdownTiempoPorBala = 0;
+        I_Armas arma = datosJugador.armasJugador[datosJugador.armaActual];
+        Debug.Log("Usando arma: " + arma.Nombre + " con " + arma.Balas + " balas.");
+    }
+    public void CambioA_Rifle()
+    {
+        Destroy(modeloArma);
+        datosJugador.armaActual = 1;
+        switch (datosJugador.armasJugador[datosJugador.armaActual].Nombre)
+        {
+            case "AK-47":
+                modeloArma = Instantiate(prefabAK_47, new Vector3(0, 0, 0), Quaternion.identity);
+                modeloArma.transform.SetParent(camara.transform, false);
+                break;
+            case "Remington 870":
+                modeloArma = Instantiate(prefabRemington, new Vector3(0, 0, 0), Quaternion.identity);
+                modeloArma.transform.SetParent(camara.transform, false);
+                break;
+            case "SPAS-12":
+                modeloArma = Instantiate(prefabS12, new Vector3(0, 0, 0), Quaternion.identity);
+                modeloArma.transform.SetParent(camara.transform, false);
+                break;
+            case "M16":
+                modeloArma = Instantiate(prefabM16, new Vector3(0, 0, 0), Quaternion.identity);
+                modeloArma.transform.SetParent(camara.transform, false);
+                break;
+        }
+        countdownTiempoPorBala = 0;
+        I_Armas arma = datosJugador.armasJugador[datosJugador.armaActual];
+        Debug.Log("Usando arma: " + arma.Nombre + " con " + arma.Balas + " balas.");
+    }
 
 }
