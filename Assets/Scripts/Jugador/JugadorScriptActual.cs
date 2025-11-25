@@ -54,6 +54,7 @@ public class JugadorScriptActual : MonoBehaviour
     // objetos publicos (armas)
     public GameObject AK47;
     float contadorAnimacionCambioDeArma;
+    public float contadorRecarga;
     GameObject modeloArma;
     // golpe de zombie
     public Volume globalVolume;  
@@ -95,6 +96,7 @@ public class JugadorScriptActual : MonoBehaviour
         Cursor.lockState = CursorLockMode.Locked;
         // armas
         datosJugador.armaActual = 0;
+        contadorRecarga = 0;
         Debug.Log("hola si estoy funcionado");
         datosJugador.armasJugador = new List<I_Armas>();
         datosJugador.armasJugador.Add(new M1911());
@@ -139,6 +141,7 @@ public class JugadorScriptActual : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        contadorRecarga -= Time.deltaTime;
         vignette.intensity.value -= Time.deltaTime * 0.6f;
         if (golpeado_recientemente)
         {
@@ -151,11 +154,32 @@ public class JugadorScriptActual : MonoBehaviour
             }
         }
         if (Input.GetKeyDown(KeyCode.R))
+        {/*
+            if (datosJugador.armasJugador[datosJugador.armaActual].Balas > 0)
+            {
+                if (datosJugador.armasJugador[datosJugador.armaActual].MaximoBalas <= datosJugador.armasJugador[datosJugador.armaActual].MunicionBalas)
+                {
+                    int balasA_Entregar = datosJugador.armasJugador[datosJugador.armaActual].MaximoBalas - datosJugador.armasJugador[datosJugador.armaActual].Balas;
+                    datosJugador.armasJugador[datosJugador.armaActual].Balas += balasA_Entregar;
+                    datosJugador.armasJugador[datosJugador.armaActual].MunicionBalas -= balasA_Entregar;
+                    contadorRecarga = datosJugador.velocidadRecargaPorSegundo;
+                }else if (datosJugador.armasJugador[datosJugador.armaActual].MaximoBalas > datosJugador.armasJugador[datosJugador.armaActual].MunicionBalas)
+                {
+                    int balasA_QuitardeMaximoBalas = datosJugador.armasJugador[datosJugador.armaActual].MaximoBalas - datosJugador.armasJugador[datosJugador.armaActual].MunicionBalas;
+                    datosJugador.armasJugador[datosJugador.armaActual].Balas += balasA_QuitardeMaximoBalas;
+                    datosJugador.armasJugador[datosJugador.armaActual].MunicionBalas = 0;
+                    contadorRecarga = datosJugador.velocidadRecargaPorSegundo;
+                }
+            }
+        */
+            RecargarArma();
+        }
+        if (Input.GetKeyDown(KeyCode.O))
         {
             SceneManager.LoadScene("PruebasConMapa");
         }
         // Movimiento
-        if(contadorAnimacionCambioDeArma < 2)
+        if (contadorAnimacionCambioDeArma < 2)
         {
             contadorAnimacionCambioDeArma += Time.deltaTime;
         }
@@ -243,15 +267,92 @@ public class JugadorScriptActual : MonoBehaviour
 
         //pistola disparo + velocidad
         RaycastHit hit;
-        if (Input.GetMouseButton(0) && datosJugador.armasJugador[datosJugador.armaActual].Balas > 0)
+        if (Input.GetMouseButton(0) && datosJugador.armasJugador[datosJugador.armaActual].Balas > 0 && contadorRecarga <= 0)
         {
             countdownTiempoPorBala -= Time.deltaTime;
             disparoActivo = false;
             if (countdownTiempoPorBala < 0)
             {
-                countdownTiempoPorBala = datosJugador.armasJugador[datosJugador.armaActual].VelocidadPorBala;
+                if(datosJugador.duplicadoBalasActivas){
+                    countdownTiempoPorBala = datosJugador.armasJugador[datosJugador.armaActual].VelocidadPorBala / 2;
+                }
+                else
+                {
+                    countdownTiempoPorBala = datosJugador.armasJugador[datosJugador.armaActual].VelocidadPorBala;
+                }
             }
-            if (countdownTiempoPorBala == datosJugador.armasJugador[datosJugador.armaActual].VelocidadPorBala)
+            if (datosJugador.duplicadoBalasActivas) // en caso de ser activado el perk
+            {
+                if (countdownTiempoPorBala == datosJugador.armasJugador[datosJugador.armaActual].VelocidadPorBala / 2)
+                {
+                    disparoActivo = true;
+                    if (Physics.Raycast(camara.transform.position, direccionCamara, out hit, 15))
+                    {
+                        //velocidadCamara.x = -70; // esta linea era el recoil generico. Ahora no
+                        velocidadCamara.x = datosJugador.armasJugador[datosJugador.armaActual].Recoil;
+                        datosJugador.armasJugador[datosJugador.armaActual].Balas--;
+                        //Sistema de recarga automatica
+                        if (datosJugador.armasJugador[datosJugador.armaActual].Balas <= 0)
+                        {
+                            RecargarArma();
+                        }
+                        Debug.Log("le di a " + hit.collider.gameObject.tag);
+                        Instantiate(prefabBala, hit.point, Quaternion.identity);
+                        if (hit.collider.gameObject.tag == "Zombie")
+                        {
+                            Zombie zombie = hit.collider.GetComponentInParent<Zombie>();
+                            if (zombie != null)
+                            {
+                                Debug.Log("se esta ejecutando esto");
+                                datosJugador.puntos += 10;
+                                zombie.RecibirDisparo(datosJugador.armasJugador[datosJugador.armaActual].DanoPorBala);
+                            }
+                        }
+                        if (hit.collider.gameObject.tag == "ZombieHead")
+                        {
+                            Zombie zombie = hit.collider.GetComponentInParent<Zombie>();
+                            if (zombie != null)
+                            {
+                                Debug.Log("se esta ejecutando esto");
+                                datosJugador.puntos += 20;
+                                zombie.RecibirDisparoCabeza(datosJugador.armasJugador[datosJugador.armaActual].DanoPorBala);
+                            }
+                        }
+                        switch (datosJugador.armasJugador[datosJugador.armaActual].ID)
+                        {
+                            case 0: // M1911
+                                sonidoArma_M1911.PlayOneShot(sonidoArma_M1911.clip);
+                                break;
+                            case 1: // B23R
+                                sonidoArma_B23R.PlayOneShot(sonidoArma_B23R.clip);
+                                break;
+                            case 2: // Remington870
+                                sonidoArma_Remington.PlayOneShot(sonidoArma_Remington.clip);
+                                break;
+                            case 3: // SPAS12
+                                sonidoArma_Spas.PlayOneShot(sonidoArma_Spas.clip);
+                                break;
+                            case 4: // MP5
+                                sonidoArma_MP5.PlayOneShot(sonidoArma_MP5.clip);
+                                break;
+                            case 5: // Uzi
+                                sonidoArma_Uzi.PlayOneShot(sonidoArma_Uzi.clip);
+                                break;
+                            case 6: // AK47
+                                sonidoArma_ak47.PlayOneShot(sonidoArma_ak47.clip);
+                                break;
+                            case 7: // M16
+                                sonidoArma_M16.PlayOneShot(sonidoArma_M16.clip);
+                                break;
+                            case 9: // GranadaFragmentacion
+                                break;
+                            case 10: // Molotov
+                                break;
+                        }
+                    }
+                }
+            }// sino no, ya estuvo suave
+            else if (countdownTiempoPorBala == datosJugador.armasJugador[datosJugador.armaActual].VelocidadPorBala)
             {
                 disparoActivo = true;
                 if (Physics.Raycast(camara.transform.position, direccionCamara, out hit, 15))
@@ -262,15 +363,7 @@ public class JugadorScriptActual : MonoBehaviour
                     //Sistema de recarga automatica
                     if (datosJugador.armasJugador[datosJugador.armaActual].Balas <= 0)
                     {
-                        if (datosJugador.armasJugador[datosJugador.armaActual].MaximoBalas < datosJugador.armasJugador[datosJugador.armaActual].MunicionBalas) { 
-                            datosJugador.armasJugador[datosJugador.armaActual].Balas = datosJugador.armasJugador[datosJugador.armaActual].MaximoBalas;
-                            datosJugador.armasJugador[datosJugador.armaActual].MunicionBalas -= datosJugador.armasJugador[datosJugador.armaActual].MaximoBalas;
-                        }
-                        else
-                        {
-                            datosJugador.armasJugador[datosJugador.armaActual].Balas += datosJugador.armasJugador[datosJugador.armaActual].MunicionBalas;
-                            datosJugador.armasJugador[datosJugador.armaActual].MunicionBalas = 0;
-                        }
+                        RecargarArma();
                     }
                     Debug.Log("le di a " + hit.collider.gameObject.tag);
                     Instantiate(prefabBala, hit.point, Quaternion.identity);
@@ -436,6 +529,30 @@ public class JugadorScriptActual : MonoBehaviour
 
             golpeado_recientemente = true;
         }
+    }
+    public void RecargarArma()
+    {
+        var arma = datosJugador.armasJugador[datosJugador.armaActual]; 
+        if (arma.Balas == arma.MaximoBalas)
+            return; 
+        if (arma.MunicionBalas <= 0)
+        {
+            Debug.Log("No tienes más balas...");
+            return;
+        } 
+        int espacioEnCargador = arma.MaximoBalas - arma.Balas; 
+        if (arma.MunicionBalas >= espacioEnCargador)
+        {
+            arma.Balas += espacioEnCargador;
+            arma.MunicionBalas -= espacioEnCargador;
+        }
+        else
+        { 
+            arma.Balas += arma.MunicionBalas;
+            arma.MunicionBalas = 0;
+        }
+         
+        contadorRecarga = datosJugador.velocidadRecargaPorSegundo;
     }
     public void CompraNuevaArma(I_Armas armaEnviada)
     {

@@ -10,6 +10,12 @@ public class DatosJugador : MonoBehaviour
     public int kills;
     public int puntos = 500;
     public int headshot_acertados = 0;
+    public int velocidadRecargaPorSegundo = 2;
+    public bool duplicadoBalasActivas;
+    /* perks */
+    public float countDownPerkRecarga = 0;
+    public float countDownPerkBalas = 0;
+
     public void Start()
     {
         Debug.Log(" ======== Se han creado los datos del jugador. Disfruta tu partida =========");

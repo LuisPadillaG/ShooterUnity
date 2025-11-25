@@ -10,7 +10,9 @@ public class ControladorUI_Juego : MonoBehaviour
     public TMP_Text textoPoints;
     public TMP_Text textoNombreArmaJugador;
     public TMP_Text textoBalasArmaJugador;
-
+    public GameObject PerkHealth;
+    public GameObject PerkSpeedCola;
+    public GameObject PerkBalas;
     GameObject pressEnter;
 
     // Start is called once before the first execution of Update after the MonoBehaviour is created
@@ -20,6 +22,9 @@ public class ControladorUI_Juego : MonoBehaviour
         datosJugador = DatosJuego.GetComponent<DatosJugador>();
         pressEnter = GameObject.FindWithTag("CanvaAction");
         pressEnter.SetActive(false);
+        PerkHealth.SetActive(false);
+        PerkSpeedCola.SetActive(false);
+        PerkBalas.SetActive(false);
     }
 
     // Update is called once per frame
@@ -38,4 +43,29 @@ public class ControladorUI_Juego : MonoBehaviour
     {
         pressEnter.SetActive(false);
     }
+    public void ActivarPerkHealth()
+    {
+        PerkHealth.SetActive(true);
+    }
+    public void DesactivarPerkHealth()
+    {
+        PerkHealth.SetActive(false);
+    }
+    public void ActivarPerkSpeedCola()
+    {
+        PerkSpeedCola.SetActive(true);
+    }
+    public void DesactivarSpeedCola()
+    {
+        PerkSpeedCola.SetActive(false);
+    }
+    public void ActivarPerkBalas()
+    {
+        PerkBalas.SetActive(true);
+    }
+    public void DesactivarPerkBalas()
+    {
+        PerkBalas.SetActive(false);
+    }
+
 }
