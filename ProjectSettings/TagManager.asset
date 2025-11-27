@@ -9,6 +9,11 @@ TagManager:
   - ColliderJugador
   - ZombieAtackArm
   - CanvaAction
+  - Granero2doPiso
+  - Granero1erPiso
+  - Cobertizo
+  - Casa1erPiso
+  - Casa2doPiso
   layers:
   - Default
   - TransparentFX
@@ -16,7 +21,7 @@ TagManager:
   - ObjetosNoVisibles
   - Water
   - UI
-  - 
+  - AtaqueZombie
   - 
   - 
   - 

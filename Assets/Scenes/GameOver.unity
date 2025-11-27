@@ -211,7 +211,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &260840392
 RectTransform:
   m_ObjectHideFlags: 0
@@ -344,12 +344,12 @@ GameObject:
   - component: {fileID: 276471049}
   - component: {fileID: 276471048}
   m_Layer: 5
-  m_Name: Headshots (1)
+  m_Name: HeadShotsEdit
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &276471047
 RectTransform:
   m_ObjectHideFlags: 0
@@ -623,7 +623,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &516031564
 RectTransform:
   m_ObjectHideFlags: 0
@@ -663,9 +663,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: 'Downs
-
-'
+  m_text: Rounds
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 2e498d1c8094910479dc3e1b768306a4, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 2e498d1c8094910479dc3e1b768306a4, type: 2}
@@ -761,7 +759,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &621407908
 RectTransform:
   m_ObjectHideFlags: 0
@@ -972,7 +970,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &709683849
 RectTransform:
   m_ObjectHideFlags: 0
@@ -1012,7 +1010,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Player Gamertag
+  m_text: Gamer
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 2e498d1c8094910479dc3e1b768306a4, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 2e498d1c8094910479dc3e1b768306a4, type: 2}
@@ -1450,10 +1448,10 @@ RectTransform:
   m_LocalScale: {x: 0, y: 0, z: 0}
   m_ConstrainProportionsScale: 0
   m_Children:
+  - {fileID: 1720492512}
   - {fileID: 628095752}
   - {fileID: 1268218604}
   - {fileID: 1173462566}
-  - {fileID: 1720492512}
   - {fileID: 709683849}
   - {fileID: 1365429621}
   - {fileID: 1594653315}
@@ -1492,7 +1490,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &1173462566
 RectTransform:
   m_ObjectHideFlags: 0
@@ -1645,7 +1643,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0.5, y: 0.5}
   m_AnchorMax: {x: 0.5, y: 0.5}
-  m_AnchoredPosition: {x: -114, y: -8}
+  m_AnchoredPosition: {x: -110.34999, y: 24.999989}
   m_SizeDelta: {x: 220.70001, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1268218605
@@ -1764,7 +1762,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &1365429621
 RectTransform:
   m_ObjectHideFlags: 0
@@ -1987,12 +1985,12 @@ GameObject:
   - component: {fileID: 1519659067}
   - component: {fileID: 1519659066}
   m_Layer: 5
-  m_Name: Kills (1)
+  m_Name: KillsEdit
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &1519659065
 RectTransform:
   m_ObjectHideFlags: 0
@@ -2219,6 +2217,11 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: ff9e088372668fe46913e197bb01cf17, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  textoScore: {fileID: 1594653316}
+  textoKills: {fileID: 1519659066}
+  textoRounds: {fileID: 1951694998}
+  textoHeadshots: {fileID: 276471048}
+  textoPrincipal: {fileID: 621407909}
 --- !u!4 &1585655208
 Transform:
   m_ObjectHideFlags: 0
@@ -2246,12 +2249,12 @@ GameObject:
   - component: {fileID: 1594653317}
   - component: {fileID: 1594653316}
   m_Layer: 5
-  m_Name: Score (1)
+  m_Name: ScoreEdit
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &1594653315
 RectTransform:
   m_ObjectHideFlags: 0
@@ -2387,7 +2390,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!224 &1720492512
 RectTransform:
   m_ObjectHideFlags: 0
@@ -2404,7 +2407,7 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0.5}
   m_AnchorMax: {x: 0, y: 0.5}
-  m_AnchoredPosition: {x: 598.1866, y: 0.0000095367}
+  m_AnchoredPosition: {x: 598.1866, y: 0}
   m_SizeDelta: {x: 281.0732, y: 50}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &1720492513
@@ -2525,7 +2528,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &1818703193
 RectTransform:
   m_ObjectHideFlags: 0
@@ -2777,12 +2780,12 @@ GameObject:
   - component: {fileID: 1951694999}
   - component: {fileID: 1951694998}
   m_Layer: 5
-  m_Name: Downs (1)
+  m_Name: Rounds
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &1951694997
 RectTransform:
   m_ObjectHideFlags: 0
@@ -2918,7 +2921,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!224 &2012943483
 RectTransform:
   m_ObjectHideFlags: 0

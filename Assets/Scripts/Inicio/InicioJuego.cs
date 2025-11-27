@@ -75,7 +75,7 @@ public class InicioJuego : MonoBehaviour
                 case 0:
                     if (Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.KeypadEnter))
                     {
-                        SceneManager.LoadScene("PruebasConMapa");
+                        SceneManager.LoadScene("Loading");
                     }
 
                     if (Input.GetKeyDown(KeyCode.DownArrow))
@@ -87,9 +87,9 @@ public class InicioJuego : MonoBehaviour
                     }
                     break;
                 case 1:
-                    if (Input.GetKeyDown(KeyCode.KeypadEnter))
+                    if (Input.GetKeyDown(KeyCode.Return) || Input.GetKeyDown(KeyCode.KeypadEnter))
                     {
-                        SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+                        SalirDelJuego();
                     }
                     if (Input.GetKeyDown(KeyCode.UpArrow) )
                     {
@@ -102,5 +102,18 @@ public class InicioJuego : MonoBehaviour
             }
             
         }
+    }
+    public void SalirDelJuego()
+    {
+    #if UNITY_EDITOR
+            // Cerrar modo Play en el Editor
+            UnityEditor.EditorApplication.isPlaying = false;
+    #elif UNITY_WEBGL
+            // WebGL no permite cerrar la ventana, así que solo "simulamos"
+            Debug.Log("Salir no es posible en WebGL. Cierra la pestaña manualmente.");
+    #else
+            // Cierra el juego (Windows, Mac, Linux, Android)
+            Application.Quit();
+    #endif
     }
 }

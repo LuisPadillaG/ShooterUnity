@@ -1,4 +1,4 @@
-
+ï»¿
 using System.Collections.Generic; 
 using UnityEngine;
 using UnityEngine.SceneManagement;
@@ -48,7 +48,7 @@ public class JugadorScriptActual : MonoBehaviour
     bool estabaEnSuelo;
     int pieTurno; // 1 pie derecho, 2 pie izquierdo
     AudioSource correrDerecho, correrIzquierda;
-    AudioSource saltoMadera, saltoPiso;
+    AudioSource saltoMadera, saltoPiso, mePegaronSOUND, vidaBajaSOUND;
     AudioSource sonidoArma_ak47, sonidoArma_M1911, sonidoArma_B23R, sonidoArma_Remington, sonidoArma_Spas, sonidoArma_MP5, sonidoArma_Uzi, sonidoArma_M16;
 
     // objetos publicos (armas)
@@ -66,10 +66,17 @@ public class JugadorScriptActual : MonoBehaviour
     float tiempoRetroceso;
     float duracionRetroceso; // tiempo que dura el retroceso
     float fuerzaRetroceso; // distancia total del retroceso
-
+    GameObject Granero_1erPiso, CZ_Granero_1erPiso;
+    GameObject Granero_2doPiso, CZ_Granero_2doPiso;
+    GameObject Cobertizo, CZ_Cobertizo;
+    GameObject Casa1erPiso, CZ_Casa1erPiso;
+    GameObject Casa2doPiso, CZ_Casa2doPiso;
+    float contadorJugadorMuriendo;
+    bool seMurio;
     // Start is called once before the first execution of Update after the MonoBehaviour is created
     void Start()
     {
+        seMurio = false;
         DatosJuego = GameObject.Find("DatosJuego");
         Debug.Log(DatosJuego.gameObject.name);
         datosJugador = DatosJuego.GetComponent<DatosJugador>();
@@ -112,6 +119,8 @@ public class JugadorScriptActual : MonoBehaviour
         contador_caminata = 0;
         correrDerecho = this.transform.GetChild(2).GetChild(2).GetComponent<AudioSource>();
         correrIzquierda = this.transform.GetChild(2).GetChild(3).GetComponent<AudioSource>();
+        mePegaronSOUND = this.transform.GetChild(2).GetChild(6).GetComponent<AudioSource>();
+        vidaBajaSOUND = this.transform.GetChild(2).GetChild(7).GetComponent<AudioSource>();
         caminataActiva = false;
         corridaActiva = false;
         estabaEnSuelo = true;
@@ -128,7 +137,7 @@ public class JugadorScriptActual : MonoBehaviour
         sonidoArma_ak47 = this.transform.GetChild(3).GetChild(6).GetComponent<AudioSource>();
         sonidoArma_M16 = this.transform.GetChild(3).GetChild(7).GetComponent<AudioSource>();
 
-        //recibir daño
+        //recibir daÃ±o
         globalVolume.profile.TryGet(out vignette);
         coolDownRecibirDano = 0.4f;
         golpeado_recientemente = false;
@@ -136,25 +145,45 @@ public class JugadorScriptActual : MonoBehaviour
         tiempoRetroceso = 0f;
         duracionRetroceso = 0.2f; 
         fuerzaRetroceso = 2f;
+        // posicionJugador para zombies
+        Granero_1erPiso = GameObject.FindWithTag("Granero1erPiso");
+        Granero_2doPiso = GameObject.FindWithTag("Granero2doPiso");
+        Cobertizo = GameObject.FindWithTag("Cobertizo");
+        Casa1erPiso = GameObject.FindWithTag("Casa1erPiso");
+        Casa2doPiso = GameObject.FindWithTag("Casa2doPiso");
+        // por algo puse gz. No se que significa, pero por algo lo puse.
+        CZ_Granero_1erPiso = GameObject.FindWithTag("Granero1erPiso").transform.GetChild(0).gameObject;
+        CZ_Granero_2doPiso = GameObject.FindWithTag("Granero2doPiso").transform.GetChild(0).gameObject;
+        CZ_Cobertizo = GameObject.FindWithTag("Cobertizo").transform.GetChild(0).gameObject;
+        CZ_Casa1erPiso = GameObject.FindWithTag("Casa1erPiso").transform.GetChild(0).gameObject;
+        CZ_Casa2doPiso = GameObject.FindWithTag("Casa2doPiso").transform.GetChild(0).gameObject;
+
+        CZ_Granero_1erPiso.SetActive(false);
+        CZ_Granero_2doPiso.SetActive(false);
+        CZ_Casa1erPiso.SetActive(false);
+        CZ_Casa2doPiso.SetActive(false);
+        CZ_Cobertizo.SetActive(false);
     }
 
     // Update is called once per frame
     void Update()
     {
-        contadorRecarga -= Time.deltaTime;
-        vignette.intensity.value -= Time.deltaTime * 0.6f;
-        if (golpeado_recientemente)
+        if (!seMurio)
         {
-            coolDownRecibirDano -= Time.deltaTime;
-            if(coolDownRecibirDano < 0)
+            contadorRecarga -= Time.deltaTime;
+            vignette.intensity.value -= Time.deltaTime * 0.6f;
+            if (golpeado_recientemente)
             {
-                golpeado_recientemente = false;
-                coolDownRecibirDano = 0.4f;
-                Debug.Log("ya le pueden pegar nuevamente");
+                coolDownRecibirDano -= Time.deltaTime;
+                if (coolDownRecibirDano < 0)
+                {
+                    golpeado_recientemente = false;
+                    coolDownRecibirDano = 0.4f;
+                    Debug.Log("ya le pueden pegar nuevamente");
+                }
             }
-        }
-        if (Input.GetKeyDown(KeyCode.R))
-        {/*
+            if (Input.GetKeyDown(KeyCode.R))
+            {/*
             if (datosJugador.armasJugador[datosJugador.armaActual].Balas > 0)
             {
                 if (datosJugador.armasJugador[datosJugador.armaActual].MaximoBalas <= datosJugador.armasJugador[datosJugador.armaActual].MunicionBalas)
@@ -172,121 +201,202 @@ public class JugadorScriptActual : MonoBehaviour
                 }
             }
         */
-            RecargarArma();
-        }
-        if (Input.GetKeyDown(KeyCode.O))
-        {
-            SceneManager.LoadScene("PruebasConMapa");
-        }
-        // Movimiento
-        if (contadorAnimacionCambioDeArma < 2)
-        {
-            contadorAnimacionCambioDeArma += Time.deltaTime;
-        }
-        if (Input.GetKey(KeyCode.LeftShift))
-        {
-            puntosVelocidad = 6;
-        }
-        else
-        {
-            puntosVelocidad = 4;
-        }
-        velocidad.x = Input.GetAxis("Horizontal") * puntosVelocidad;
-        velocidad.z = Input.GetAxis("Vertical") * puntosVelocidad;
-
-        if (characterController.isGrounded)
-        {
-            if (Input.GetButtonDown("Jump"))
-            {
-                velocidad.y = 7.5f;
+                RecargarArma();
             }
-            //Debug.Log(velocidadAgachado);
-        }
-        else
-        {
-            velocidad.y -= 30 * Time.deltaTime;
-        }
-
-        // Rotacion version profe
-        if (tiempoRetroceso > 0f)
-        {
-            Vector3 mover = retrocesoActual * (Time.deltaTime / duracionRetroceso); // aplica poco a poco
-            characterController.Move(mover);
-            tiempoRetroceso -= Time.deltaTime;
-            if (tiempoRetroceso <= 0f)
+            if (Input.GetKeyDown(KeyCode.O))
             {
-                retrocesoActual = Vector3.zero;
+                SceneManager.LoadScene("PruebasConMapa");
             }
-        }
-        objetoRotacionCamara.transform.rotation = camara.transform.rotation;
-        objetoRotacionCamara.transform.rotation = Quaternion.Euler(0, objetoRotacionCamara.transform.rotation.eulerAngles.y, 0);
-        characterController.Move(objetoRotacionCamara.transform.TransformDirection(velocidad) * Time.deltaTime);
-        objetoModelo.transform.rotation = Quaternion.Euler(0, objetoRotacionCamara.transform.rotation.eulerAngles.y, 0);
-
-        // Rotación de cámara
-        rotacionCamara.y += Input.GetAxis("Mouse X") * 3;
-        rotacionCamara.x -= Input.GetAxis("Mouse Y") * 3;
-        //Basado en MiVersion Camara)
-        rotacionCamara.x = Mathf.Clamp(rotacionCamara.x, -40, 40);
-
-
-        camara.transform.rotation = Quaternion.Euler(rotacionCamara);
-        Debug.DrawRay(camara.transform.position, camara.transform.TransformDirection(new Vector3(0, 0, 1)), Color.green);
-        // Cambio de arma
-        if (Input.GetKeyDown(KeyCode.Alpha1))
-        {
-            if(datosJugador.armaActual != 0)
+            // Movimiento
+            if (contadorAnimacionCambioDeArma < 2)
             {
-                CambioA_Pistola();
+                contadorAnimacionCambioDeArma += Time.deltaTime;
             }
-            datosJugador.armaActual = 0;
-            
-        }
-        if(datosJugador.armasJugador.Count > 1)
-        {
-            if (Input.GetKeyDown(KeyCode.Alpha2))
+            if (Input.GetKey(KeyCode.LeftShift))
             {
-                if (datosJugador.armaActual != 1)
+                puntosVelocidad = 6;
+            }
+            else
+            {
+                puntosVelocidad = 4;
+            }
+            velocidad.x = Input.GetAxis("Horizontal") * puntosVelocidad;
+            velocidad.z = Input.GetAxis("Vertical") * puntosVelocidad;
+
+            if (characterController.isGrounded)
+            {
+                if (Input.GetButtonDown("Jump"))
                 {
-                    CambioA_Rifle();
+                    velocidad.y = 7.5f;
                 }
-                datosJugador.armaActual = 1;
+                //Debug.Log(velocidadAgachado);
             }
-        }
-        // Rango de disparo
-        Vector3 direccionCamara = camara.transform.TransformDirection(Vector3.forward);
-        direccionCamara.y += -0.1f + Random.value * 0.1f;
-        direccionCamara.x += -0.1f + Random.value * 0.1f;
-        // Recoil
-        rotacionCamara += velocidadCamara * Time.deltaTime;
-        velocidadCamara.x += Time.deltaTime * 500;
-        if (velocidadCamara.x > 0)
-        {
-            velocidadCamara.x = 0;
-        }
+            else
+            {
+                velocidad.y -= 30 * Time.deltaTime;
+            }
 
-        //pistola disparo + velocidad
-        RaycastHit hit;
-        if (Input.GetMouseButton(0) && datosJugador.armasJugador[datosJugador.armaActual].Balas > 0 && contadorRecarga <= 0)
-        {
-            countdownTiempoPorBala -= Time.deltaTime;
-            disparoActivo = false;
-            if (countdownTiempoPorBala < 0)
+            // Rotacion version profe
+            if (tiempoRetroceso > 0f)
             {
-                if(datosJugador.duplicadoBalasActivas){
-                    countdownTiempoPorBala = datosJugador.armasJugador[datosJugador.armaActual].VelocidadPorBala / 2;
-                }
-                else
+                Vector3 mover = retrocesoActual * (Time.deltaTime / duracionRetroceso); // aplica poco a poco
+                characterController.Move(mover);
+                tiempoRetroceso -= Time.deltaTime;
+                if (tiempoRetroceso <= 0f)
                 {
-                    countdownTiempoPorBala = datosJugador.armasJugador[datosJugador.armaActual].VelocidadPorBala;
+                    retrocesoActual = Vector3.zero;
                 }
             }
-            if (datosJugador.duplicadoBalasActivas) // en caso de ser activado el perk
+            objetoRotacionCamara.transform.rotation = camara.transform.rotation;
+            objetoRotacionCamara.transform.rotation = Quaternion.Euler(0, objetoRotacionCamara.transform.rotation.eulerAngles.y, 0);
+            characterController.Move(objetoRotacionCamara.transform.TransformDirection(velocidad) * Time.deltaTime);
+            objetoModelo.transform.rotation = Quaternion.Euler(0, objetoRotacionCamara.transform.rotation.eulerAngles.y, 0);
+
+            // RotaciÃ³n de cÃ¡mara
+            rotacionCamara.y += Input.GetAxis("Mouse X") * 3;
+            rotacionCamara.x -= Input.GetAxis("Mouse Y") * 3;
+            //Basado en MiVersion Camara)
+            rotacionCamara.x = Mathf.Clamp(rotacionCamara.x, -40, 40);
+
+
+            camara.transform.rotation = Quaternion.Euler(rotacionCamara);
+            Debug.DrawRay(camara.transform.position, camara.transform.TransformDirection(new Vector3(0, 0, 1)), Color.green);
+            // Cambio de arma
+            if (Input.GetKeyDown(KeyCode.Alpha1))
             {
-                if (countdownTiempoPorBala == datosJugador.armasJugador[datosJugador.armaActual].VelocidadPorBala / 2)
+                if (datosJugador.armaActual != 0)
+                {
+                    CambioA_Pistola();
+                }
+                datosJugador.armaActual = 0;
+
+            }
+            if (datosJugador.armasJugador.Count > 1)
+            {
+                if (Input.GetKeyDown(KeyCode.Alpha2))
+                {
+                    if (datosJugador.armaActual != 1)
+                    {
+                        CambioA_Rifle();
+                    }
+                    datosJugador.armaActual = 1;
+                }
+            }
+            // Rango de disparo
+            Vector3 direccionCamara = camara.transform.TransformDirection(Vector3.forward);
+            direccionCamara.y += -0.1f + Random.value * 0.1f;
+            direccionCamara.x += -0.1f + Random.value * 0.1f;
+            // Recoil
+            rotacionCamara += velocidadCamara * Time.deltaTime;
+            velocidadCamara.x += Time.deltaTime * 500;
+            if (velocidadCamara.x > 0)
+            {
+                velocidadCamara.x = 0;
+            }
+
+            //pistola disparo + velocidad
+            RaycastHit hit;
+            if (Input.GetMouseButton(0) && datosJugador.armasJugador[datosJugador.armaActual].Balas > 0 && contadorRecarga <= 0)
+            {
+                countdownTiempoPorBala -= Time.deltaTime;
+                disparoActivo = false;
+                if (countdownTiempoPorBala < 0)
+                {
+                    if (datosJugador.duplicadoBalasActivas)
+                    {
+                        countdownTiempoPorBala = datosJugador.armasJugador[datosJugador.armaActual].VelocidadPorBala / 2;
+                    }
+                    else
+                    {
+                        countdownTiempoPorBala = datosJugador.armasJugador[datosJugador.armaActual].VelocidadPorBala;
+                    }
+                }
+                if (datosJugador.duplicadoBalasActivas) // en caso de ser activado el perk
+                {
+                    if (countdownTiempoPorBala == datosJugador.armasJugador[datosJugador.armaActual].VelocidadPorBala / 2)
+                    {
+                        disparoActivo = true;
+                        if (Physics.Raycast(camara.transform.position, direccionCamara, out hit, 15))
+                        {
+                            //velocidadCamara.x = -70; // esta linea era el recoil generico. Ahora no
+                            velocidadCamara.x = datosJugador.armasJugador[datosJugador.armaActual].Recoil;
+                            datosJugador.armasJugador[datosJugador.armaActual].Balas--;
+                            //Sistema de recarga automatica
+                            if (datosJugador.armasJugador[datosJugador.armaActual].Balas <= 0)
+                            {
+                                RecargarArma();
+                            }
+                            Debug.Log(" LE DI A " + hit.collider.gameObject.tag + " ==================================================");
+                            //Instantiate(prefabBala, hit.point, Quaternion.identity);
+                            if (hit.collider.gameObject.tag == "Zombie")
+                            {
+                                Zombie zombie = hit.collider.GetComponentInParent<Zombie>();
+                                if (zombie != null)
+                                {
+                                    Debug.Log("se esta ejecutando esto");
+                                    datosJugador.puntos += 20;
+                                    zombie.RecibirDisparo(datosJugador.armasJugador[datosJugador.armaActual].DanoPorBala);
+                                }
+                            }
+                            if (hit.collider.gameObject.tag == "ZombieAtackArm")
+                            {
+                                Zombie zombie = hit.collider.GetComponentInParent<Zombie>();
+                                if (zombie != null)
+                                {
+                                    Debug.Log("se esta ejecutando esto");
+                                    datosJugador.puntos += 30;
+                                    zombie.RecibirDisparo(datosJugador.armasJugador[datosJugador.armaActual].DanoPorBala);
+                                }
+                            }
+                            if (hit.collider.gameObject.tag == "ZombieHead")
+                            {
+                                Zombie zombie = hit.collider.GetComponentInParent<Zombie>();
+                                if (zombie != null)
+                                {
+                                    Debug.Log("se esta ejecutando esto");
+                                    datosJugador.puntos += 50;
+                                    zombie.RecibirDisparoCabeza(datosJugador.armasJugador[datosJugador.armaActual].DanoPorBala);
+                                }
+                            }
+                            switch (datosJugador.armasJugador[datosJugador.armaActual].ID)
+                            {
+                                case 0: // M1911
+                                    sonidoArma_M1911.PlayOneShot(sonidoArma_M1911.clip);
+                                    break;
+                                case 1: // B23R
+                                    sonidoArma_B23R.PlayOneShot(sonidoArma_B23R.clip);
+                                    break;
+                                case 2: // Remington870
+                                    sonidoArma_Remington.PlayOneShot(sonidoArma_Remington.clip);
+                                    break;
+                                case 3: // SPAS12
+                                    sonidoArma_Spas.PlayOneShot(sonidoArma_Spas.clip);
+                                    break;
+                                case 4: // MP5
+                                    sonidoArma_MP5.PlayOneShot(sonidoArma_MP5.clip);
+                                    break;
+                                case 5: // Uzi
+                                    sonidoArma_Uzi.PlayOneShot(sonidoArma_Uzi.clip);
+                                    break;
+                                case 6: // AK47
+                                    sonidoArma_ak47.PlayOneShot(sonidoArma_ak47.clip);
+                                    break;
+                                case 7: // M16
+                                    sonidoArma_M16.PlayOneShot(sonidoArma_M16.clip);
+                                    break;
+                                case 9: // GranadaFragmentacion
+                                    break;
+                                case 10: // Molotov
+                                    break;
+                            }
+                        }
+                    }
+                }// sino no, ya estuvo suave
+                else if (countdownTiempoPorBala == datosJugador.armasJugador[datosJugador.armaActual].VelocidadPorBala)
                 {
                     disparoActivo = true;
-                    if (Physics.Raycast(camara.transform.position, direccionCamara, out hit, 15))
+                    int layerMask = ~LayerMask.GetMask("AtaqueZombie");
+                    if (Physics.Raycast(camara.transform.position, direccionCamara, out hit, 15, layerMask))
                     {
                         //velocidadCamara.x = -70; // esta linea era el recoil generico. Ahora no
                         velocidadCamara.x = datosJugador.armasJugador[datosJugador.armaActual].Recoil;
@@ -297,14 +407,14 @@ public class JugadorScriptActual : MonoBehaviour
                             RecargarArma();
                         }
                         Debug.Log("le di a " + hit.collider.gameObject.tag);
-                        Instantiate(prefabBala, hit.point, Quaternion.identity);
+                        //Instantiate(prefabBala, hit.point, Quaternion.identity);
                         if (hit.collider.gameObject.tag == "Zombie")
                         {
                             Zombie zombie = hit.collider.GetComponentInParent<Zombie>();
                             if (zombie != null)
                             {
                                 Debug.Log("se esta ejecutando esto");
-                                datosJugador.puntos += 10;
+                                datosJugador.puntos += 30;
                                 zombie.RecibirDisparo(datosJugador.armasJugador[datosJugador.armaActual].DanoPorBala);
                             }
                         }
@@ -314,7 +424,7 @@ public class JugadorScriptActual : MonoBehaviour
                             if (zombie != null)
                             {
                                 Debug.Log("se esta ejecutando esto");
-                                datosJugador.puntos += 20;
+                                datosJugador.puntos += 60;
                                 zombie.RecibirDisparoCabeza(datosJugador.armasJugador[datosJugador.armaActual].DanoPorBala);
                             }
                         }
@@ -351,154 +461,131 @@ public class JugadorScriptActual : MonoBehaviour
                         }
                     }
                 }
-            }// sino no, ya estuvo suave
-            else if (countdownTiempoPorBala == datosJugador.armasJugador[datosJugador.armaActual].VelocidadPorBala)
-            {
-                disparoActivo = true;
-                if (Physics.Raycast(camara.transform.position, direccionCamara, out hit, 15))
-                {
-                    //velocidadCamara.x = -70; // esta linea era el recoil generico. Ahora no
-                    velocidadCamara.x = datosJugador.armasJugador[datosJugador.armaActual].Recoil;
-                    datosJugador.armasJugador[datosJugador.armaActual].Balas--;
-                    //Sistema de recarga automatica
-                    if (datosJugador.armasJugador[datosJugador.armaActual].Balas <= 0)
-                    {
-                        RecargarArma();
-                    }
-                    Debug.Log("le di a " + hit.collider.gameObject.tag);
-                    Instantiate(prefabBala, hit.point, Quaternion.identity);
-                    if (hit.collider.gameObject.tag == "Zombie")
-                    {
-                        Zombie zombie = hit.collider.GetComponentInParent<Zombie>();
-                        if (zombie != null)
-                        {
-                            Debug.Log("se esta ejecutando esto");
-                            datosJugador.puntos += 10;
-                            zombie.RecibirDisparo(datosJugador.armasJugador[datosJugador.armaActual].DanoPorBala);
-                        }
-                    }
-                    if (hit.collider.gameObject.tag == "ZombieHead")
-                    {
-                        Zombie zombie = hit.collider.GetComponentInParent<Zombie>();
-                        if (zombie != null)
-                        {
-                            Debug.Log("se esta ejecutando esto");
-                            datosJugador.puntos += 20;
-                            zombie.RecibirDisparoCabeza(datosJugador.armasJugador[datosJugador.armaActual].DanoPorBala);
-                        }
-                    }
-                    switch (datosJugador.armasJugador[datosJugador.armaActual].ID)
-                    {
-                        case 0: // M1911
-                            sonidoArma_M1911.PlayOneShot(sonidoArma_M1911.clip);
-                            break;
-                        case 1: // B23R
-                            sonidoArma_B23R.PlayOneShot(sonidoArma_B23R.clip);
-                            break;
-                        case 2: // Remington870
-                            sonidoArma_Remington.PlayOneShot(sonidoArma_Remington.clip);
-                            break;
-                        case 3: // SPAS12
-                            sonidoArma_Spas.PlayOneShot(sonidoArma_Spas.clip);
-                            break;
-                        case 4: // MP5
-                            sonidoArma_MP5.PlayOneShot(sonidoArma_MP5.clip);
-                            break;
-                        case 5: // Uzi
-                            sonidoArma_Uzi.PlayOneShot(sonidoArma_Uzi.clip);
-                            break;
-                        case 6: // AK47
-                            sonidoArma_ak47.PlayOneShot(sonidoArma_ak47.clip);
-                            break;
-                        case 7: // M16
-                            sonidoArma_M16.PlayOneShot(sonidoArma_M16.clip);
-                            break;
-                        case 9: // GranadaFragmentacion
-                            break;
-                        case 10: // Molotov
-                            break;
-                    }
-                }
-            }
 
-        }
-        // ------------------------------------------------ Animaciones + SFX
-        camara.transform.position = HuesoCabeza.transform.position;
-        if (velocidad.x == 0 && velocidad.z == 0)
-        {
-            estadoObjetivo = 0;
-            caminataActiva = false;
-            corridaActiva = false;
-            
-        }
-        else
-        {
-            
-            estadoObjetivo = 1;
-            caminataActiva = true;
-            if (Input.GetKey(KeyCode.LeftShift) && characterController.isGrounded)
+            }
+            // ------------------------------------------------ Animaciones + SFX
+            camara.transform.position = HuesoCabeza.transform.position;
+            if (velocidad.x == 0 && velocidad.z == 0)
             {
+                estadoObjetivo = 0;
                 caminataActiva = false;
-                corridaActiva = true;
-                estadoObjetivo = 2;
-                contador_caminata += Time.deltaTime;
-                if (contador_caminata >= 0.25f)
-                {
-                    switch (pieTurno)
-                    {
-                        case 1:
-                            correrDerecho.Play();
-                            pieTurno = 2;
-                            break;
-                        case 2:
-                            correrIzquierda.Play();
-                            pieTurno = 1;
-                            break;
-                    }
-                    contador_caminata = 0;
-                }
+                corridaActiva = false;
+
             }
             else
             {
-                corridaActiva = false;
-            }
-            if (caminataActiva && characterController.isGrounded)
-            {
-                contador_caminata += Time.deltaTime;
-                if (contador_caminata >= 0.5f)
+
+                estadoObjetivo = 1;
+                caminataActiva = true;
+                if (Input.GetKey(KeyCode.LeftShift) && characterController.isGrounded)
                 {
-                    switch (pieTurno)
+                    caminataActiva = false;
+                    corridaActiva = true;
+                    estadoObjetivo = 2;
+                    contador_caminata += Time.deltaTime;
+                    if (contador_caminata >= 0.25f)
                     {
-                        case 1:
-                            pasoDerecho.Play();
-                            pieTurno = 2;
-                            break;
-                        case 2:
-                            pasoIzquierdo.Play();
-                            pieTurno = 1;
-                            break;
+                        switch (pieTurno)
+                        {
+                            case 1:
+                                correrDerecho.Play();
+                                pieTurno = 2;
+                                break;
+                            case 2:
+                                correrIzquierda.Play();
+                                pieTurno = 1;
+                                break;
+                        }
+                        contador_caminata = 0;
                     }
-                    contador_caminata = 0;
+                }
+                else
+                {
+                    corridaActiva = false;
+                }
+                if (caminataActiva && characterController.isGrounded)
+                {
+                    contador_caminata += Time.deltaTime;
+                    if (contador_caminata >= 0.5f)
+                    {
+                        switch (pieTurno)
+                        {
+                            case 1:
+                                pasoDerecho.Play();
+                                pieTurno = 2;
+                                break;
+                            case 2:
+                                pasoIzquierdo.Play();
+                                pieTurno = 1;
+                                break;
+                        }
+                        contador_caminata = 0;
+                    }
                 }
             }
+            if (Input.GetButtonDown("Jump"))
+            {
+                estadoObjetivo = 3;
+            }
+            if (!estabaEnSuelo && characterController.isGrounded)
+            {
+                // aqui deberia poner una logica donde reconozca donde esta pisando, ya que tenemos dos sonidos (dependiendo del piso).
+                // como nota: si vamos a trabajar de la misma manera todo este algoritmo, dependiendo del piso. Podemos almacenar todo esto en dos metodos (un metodo para madera, un metodo para piso normal) y ya simplemente segun el piso las llamamos. Creo que funcionaria, eso espero.
+                saltoMadera.Play();
+            }
+            estabaEnSuelo = characterController.isGrounded;
+            if (estadoObjetivo != animatorModelo.GetInteger("Estado"))
+            {
+                animatorModelo.SetInteger("Estado", estadoObjetivo);
+                animatorModelo.SetTrigger("CambiarEstado");
+            }
+            // ----------------------------------------- Fin animaciones
         }
-        if (Input.GetButtonDown("Jump"))
+        else  // Estado de muerte
         {
-            estadoObjetivo = 3;
+            contadorJugadorMuriendo += Time.deltaTime;
+
+            float vignetteObjetivo = 0.55f;
+
+            vignette.intensity.value = Mathf.Lerp(
+                vignette.intensity.value,
+                vignetteObjetivo,
+                Time.deltaTime * 2f
+            );
+
+            vignette.color.value = Color.Lerp(
+                vignette.color.value,
+                Color.black,
+                Time.deltaTime * 1.5f
+            );
+            Vector3 posicionFinal = camara.transform.position + new Vector3(0, -1.3f, 0);
+
+            camara.transform.position = Vector3.Lerp(
+                camara.transform.position,
+                posicionFinal,
+                Time.deltaTime * 2f
+            );
+            Quaternion rotacionObjetivo = Quaternion.Euler(
+                60f,
+                camara.transform.eulerAngles.y,
+                camara.transform.eulerAngles.z
+            );
+
+            camara.transform.rotation = Quaternion.Lerp(
+                camara.transform.rotation,
+                rotacionObjetivo,
+                Time.deltaTime * 2f
+            );
+            if (contadorJugadorMuriendo >= 2f)
+            {
+                SceneManager.LoadScene("GameOver");
+            }
         }
-        if (!estabaEnSuelo && characterController.isGrounded)
-        {
-            // aqui deberia poner una logica donde reconozca donde esta pisando, ya que tenemos dos sonidos (dependiendo del piso).
-            // como nota: si vamos a trabajar de la misma manera todo este algoritmo, dependiendo del piso. Podemos almacenar todo esto en dos metodos (un metodo para madera, un metodo para piso normal) y ya simplemente segun el piso las llamamos. Creo que funcionaria, eso espero.
-            saltoMadera.Play();
-        }
-        estabaEnSuelo = characterController.isGrounded;
-        if (estadoObjetivo != animatorModelo.GetInteger("Estado"))
-        {
-            animatorModelo.SetInteger("Estado", estadoObjetivo);
-            animatorModelo.SetTrigger("CambiarEstado");
-        }
-        // ----------------------------------------- Fin animaciones
+
+
+
+
+
     }
     private void OnControllerColliderHit(ControllerColliderHit hit)
     {
@@ -516,6 +603,7 @@ public class JugadorScriptActual : MonoBehaviour
         if (!golpeado_recientemente)
         {
             Debug.Log("Me electrocutaste pedrito");
+            mePegaronSOUND.Play();
             datosJugador.vida -= 40;
             vignette.intensity.value = 0.8f;
             retrocesoActual = -objetoRotacionCamara.transform.forward * fuerzaRetroceso;
@@ -524,7 +612,9 @@ public class JugadorScriptActual : MonoBehaviour
             if (datosJugador.vida <= 0)
             {
                 Debug.Log("GAMEEEEEEEEEEEE OVERRRRRRRRRRRRR");
-                SceneManager.LoadScene("GameOver");
+                DatosParaEnviarAGameOver.GuardarParaGameOver(datosJugador);
+                //SceneManager.LoadScene("GameOver");
+                seMurio = true;
             }
 
             golpeado_recientemente = true;
@@ -537,7 +627,7 @@ public class JugadorScriptActual : MonoBehaviour
             return; 
         if (arma.MunicionBalas <= 0)
         {
-            Debug.Log("No tienes más balas...");
+            Debug.Log("No tienes mÃ¡s balas...");
             return;
         } 
         int espacioEnCargador = arma.MaximoBalas - arma.Balas; 
@@ -640,5 +730,52 @@ public class JugadorScriptActual : MonoBehaviour
         I_Armas arma = datosJugador.armasJugador[datosJugador.armaActual];
         Debug.Log("Usando arma: " + arma.Nombre + " con " + arma.Balas + " balas.");
     }
-
+    private void OnTriggerEnter(Collider other)
+    {
+        if (other.gameObject.tag == "Cobertizo")
+        {
+            CZ_Cobertizo.SetActive(true);
+            CZ_Casa1erPiso.SetActive(false);
+            CZ_Casa2doPiso.SetActive(false);
+            CZ_Granero_1erPiso.SetActive(false);
+            CZ_Granero_2doPiso.SetActive(false);
+            Debug.Log("El creador de zombies esta en " + other.gameObject.tag);
+        }
+        if (other.gameObject.tag == "Casa1erPiso")
+        {
+            CZ_Cobertizo.SetActive(false);
+            CZ_Casa1erPiso.SetActive(true);
+            CZ_Casa2doPiso.SetActive(false);
+            CZ_Granero_1erPiso.SetActive(false);
+            CZ_Granero_2doPiso.SetActive(false);
+            Debug.Log("El creador de zombies esta en " + other.gameObject.tag);
+        }
+        if (other.gameObject.tag == "Casa2doPiso")
+        {
+            CZ_Cobertizo.SetActive(false);
+            CZ_Casa1erPiso.SetActive(false);
+            CZ_Casa2doPiso.SetActive(true);
+            CZ_Granero_1erPiso.SetActive(false);
+            CZ_Granero_2doPiso.SetActive(false);
+            Debug.Log("El creador de zombies esta en " + other.gameObject.tag);
+        }
+        if (other.gameObject.tag == "Granero1erPiso")
+        {
+            CZ_Cobertizo.SetActive(false);
+            CZ_Casa1erPiso.SetActive(false);
+            CZ_Casa2doPiso.SetActive(false);
+            CZ_Granero_1erPiso.SetActive(true);
+            CZ_Granero_2doPiso.SetActive(false);
+            Debug.Log("El creador de zombies esta en " + other.gameObject.tag);
+        }
+        if (other.gameObject.tag == "Granero2doPiso")
+        {
+            CZ_Cobertizo.SetActive(false);
+            CZ_Casa1erPiso.SetActive(false);
+            CZ_Casa2doPiso.SetActive(false);
+            CZ_Granero_1erPiso.SetActive(false);
+            CZ_Granero_2doPiso.SetActive(true);
+            Debug.Log("El creador de zombies esta en " + other.gameObject.tag);
+        }
+    }
 }

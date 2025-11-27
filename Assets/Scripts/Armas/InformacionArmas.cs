@@ -26,7 +26,7 @@ public class B23R : I_Armas
     public float Rango { get; set; } = 30f;
     public int Balas { get; set; } = 15;
     public int MaximoBalas { get; set; } = 15;
-    public int MunicionBalas { get; set; } = 45;
+    public int MunicionBalas { get; set; } = 60;
     public float DanoPorBala { get; set; } = 120f;
     public float VelocidadPorBala { get; set; } = 0.2f;
     public float Recoil { get; set; } = -140f;

@@ -57,7 +57,7 @@ public class CompraAK47 : MonoBehaviour
     {
         if(other.gameObject.tag == "Player")
         {
-            controladorUI.ActivarPressEnter();
+            controladorUI.ActivarPressEnter(armaParaEnviar[0].CostoPuntos);
             if(datosJugador.puntos >= armaParaEnviar[0].CostoPuntos && Input.GetKeyDown(KeyCode.C))
             {
                 datosJugador.puntos -= armaParaEnviar[0].CostoPuntos;

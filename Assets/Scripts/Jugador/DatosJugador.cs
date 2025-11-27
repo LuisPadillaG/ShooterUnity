@@ -10,11 +10,14 @@ public class DatosJugador : MonoBehaviour
     public int kills;
     public int puntos = 500;
     public int headshot_acertados = 0;
+    public int zombiesInGame;
     public int velocidadRecargaPorSegundo = 2;
     public bool duplicadoBalasActivas;
+    public bool cambiandoLaRonda;
     /* perks */
     public float countDownPerkRecarga = 0;
     public float countDownPerkBalas = 0;
+    
 
     public void Start()
     {

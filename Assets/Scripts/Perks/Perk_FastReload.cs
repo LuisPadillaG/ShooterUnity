@@ -72,7 +72,7 @@ public class Perk_FastReload : MonoBehaviour
     {
         if (other.gameObject.tag == "Player")
         {
-            controladorUI.ActivarPressEnter();
+            controladorUI.ActivarPressEnter(2000);
             if (Input.GetKeyDown(KeyCode.C))
             {
                 if (datosJugador.puntos >= 2000 && datosJugador.velocidadRecargaPorSegundo != 1)

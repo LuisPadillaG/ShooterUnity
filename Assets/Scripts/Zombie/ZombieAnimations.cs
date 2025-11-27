@@ -17,14 +17,14 @@ public class ZombieAnimations : MonoBehaviour
     public void AtaqueActivado() { 
         boxCollider.SetActive(true);
         Debug.Log("se activo el ataque");
-        mixamoBrazoDerecho.enabled = false;
-        mixamoBrazoIzquierdo.enabled = false;
+        /*mixamoBrazoDerecho.enabled = false;
+        mixamoBrazoIzquierdo.enabled = false;*/
     }
     public void AtaqueDesctivado()
     {
         boxCollider.SetActive(false);
         Debug.Log("ya no");
-        mixamoBrazoDerecho.enabled = true;
-        mixamoBrazoIzquierdo.enabled = true;
+        /*mixamoBrazoDerecho.enabled = true;
+        mixamoBrazoIzquierdo.enabled = true;*/
     }
 }

@@ -34,7 +34,7 @@ public class Perk_vida : MonoBehaviour
     {
         if (other.gameObject.tag == "Player")
         {
-            controladorUI.ActivarPressEnter();
+            controladorUI.ActivarPressEnter(2500);
             if (Input.GetKeyDown(KeyCode.C))
             {
                 if (datosJugador.puntos >= 2500 && datosJugador.vida != 200)
