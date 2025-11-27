@@ -13,6 +13,7 @@ public class ManejadorLoading : MonoBehaviour
         contador = 0;
         textoLoading.text = "LOADING";
         Continue.SetActive(false);
+        Cursor.visible = false;
     }
 
     // Update is called once per frame

@@ -36,7 +36,8 @@ public class InicioJuego : MonoBehaviour
         selectExit.SetActive(false);
         seleccion = 0;
         colorImgSelectSolo.a = 0.1f;
-        imgSelectSolo.color =colorImgSelectSolo;
+        imgSelectSolo.color =colorImgSelectSolo; 
+        Cursor.visible = false;
     }
 
     // Update is called once per frame
@@ -78,7 +79,7 @@ public class InicioJuego : MonoBehaviour
                         SceneManager.LoadScene("Loading");
                     }
 
-                    if (Input.GetKeyDown(KeyCode.DownArrow))
+                    if (Input.GetKeyDown(KeyCode.DownArrow) || Input.GetKeyDown(KeyCode.S))
                     {
                         selectExit.SetActive(true);
                         selectSolo.SetActive(false);
@@ -91,7 +92,7 @@ public class InicioJuego : MonoBehaviour
                     {
                         SalirDelJuego();
                     }
-                    if (Input.GetKeyDown(KeyCode.UpArrow) )
+                    if (Input.GetKeyDown(KeyCode.UpArrow) || Input.GetKeyDown(KeyCode.W) )
                     {
                         selectExit.SetActive(false);
                         selectSolo.SetActive(true);
@@ -109,7 +110,6 @@ public class InicioJuego : MonoBehaviour
             // Cerrar modo Play en el Editor
             UnityEditor.EditorApplication.isPlaying = false;
     #elif UNITY_WEBGL
-            // WebGL no permite cerrar la ventana, así que solo "simulamos"
             Debug.Log("Salir no es posible en WebGL. Cierra la pestaña manualmente.");
     #else
             // Cierra el juego (Windows, Mac, Linux, Android)
